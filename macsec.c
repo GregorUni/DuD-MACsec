@@ -29,7 +29,7 @@ typedef u64 __bitwise sci_t;
 #define MACSEC_SCI_LEN 8
 
 /* SecTAG length = macsec_eth_header without the optional SCI */
-#define MACSEC_TAG_LEN 6 //Add SL Resize
+#define MACSEC_TAG_LEN 10
 
 struct macsec_eth_header {
     struct ethhdr eth;
@@ -46,7 +46,7 @@ struct macsec_eth_header {
 #else
 #error	"Please fix <asm/byteorder.h>"
 #endif
-	__be32 packet_number;
+	__be64 packet_number;
 	u8 secure_channel_id[8]; /* optional */
 } __packed;
 
@@ -84,7 +84,7 @@ struct gcm_iv {
 		u8 secure_channel_id[8];
 		sci_t sci;
 	};
-	__be32 pn;
+	__be64 pn;
 };
 
 /* Set additional MTU for fragmentation */
@@ -269,6 +269,7 @@ struct macsec_secy {
 	u32 replay_window;
 	struct macsec_tx_sc tx_sc;
 	struct macsec_rx_sc __rcu *rx_sc;
+	u64 csid;
 };
 
 struct pcpu_secy_stats {
@@ -650,7 +651,7 @@ static struct aead_request *macsec_alloc_req(struct crypto_aead *tfm,
 
 	size = sizeof(struct aead_request) + crypto_aead_reqsize(tfm);
 	iv_offset = size;
-	size += GCM_AES_IV_LEN;
+	size += crypto_aead_ivsize(tfm);
 
 	size = ALIGN(size, __alignof__(struct scatterlist));
 	sg_offset = size;
@@ -1497,19 +1498,49 @@ nosci:
 	return RX_HANDLER_PASS;
 }
 
-static struct crypto_aead *macsec_alloc_tfm(char *key, int key_len, int icv_len)
+static struct crypto_aead *macsec_alloc_tfm(char *key, int key_len, int icv_len, u64 csid)
 {
 	struct crypto_aead *tfm;
 	int ret;
 
-	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+	char* mykey;
+		printk("macsec_alloc_tfm start");
+			printk("keylen %d icvlen %d \n",key_len,icv_len);
+		//csid wird in macsec_changelink_common initialisiert und in init_rx_sa, macsec_validate_attr und init_tx_sa übergeben
+		switch (csid) {
+					case MACSEC_DEFAULT_CIPHER_ID :
+						printk("ich war hier gcm1\n");
+						tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+						break;
+					case MACSEC_CIPHER_ID_CHACHA_POLY_256:
+						printk("ich war hier chachapoly\n");
+						mykey = "12345678901234567890123456789012";
+						key_len=32;
+						tfm = crypto_alloc_aead("rfc7539(chacha20,poly1305)", 0, 0);
+						printk("chachapoly\n");
+						break;
+					case MACSEC_CIPHER_ID_AEGIS128L_128:
+						tfm = crypto_alloc_aead("aegis128l", 0, 0);
+						printk("ich war hier aegis128l\n ");
+						break;
+					case MACSEC_CIPHER_ID_MORUS640_128:
+						tfm = crypto_alloc_aead("morus640", 0, 0);
+						printk("ich war hier morus640\n");
+						break;
+					default:
+						printk("ich war hier gcm2\n");
+						tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+						break;
+		}
 
 	if (IS_ERR(tfm))
 		return tfm;
 
-	ret = crypto_aead_setkey(tfm, key, key_len);
-	if (ret < 0)
-		goto fail;
+	//if CHACHA_POLY Cipher is chosen, then the key needs to invoked manually.
+		if(csid == MACSEC_CIPHER_ID_CHACHA_POLY_256 )
+			ret = crypto_aead_setkey(tfm, mykey, key_len);
+		else
+			ret = crypto_aead_setkey(tfm, key, key_len);
 
 	ret = crypto_aead_setauthsize(tfm, icv_len);
 	if (ret < 0)
@@ -1522,13 +1553,13 @@ fail:
 }
 
 static int init_rx_sa(struct macsec_rx_sa *rx_sa, char *sak, int key_len,
-		      int icv_len)
+		      int icv_len, u64 csid)
 {
 	rx_sa->stats = alloc_percpu(struct macsec_rx_sa_stats);
 	if (!rx_sa->stats)
 		return -ENOMEM;
 
-	rx_sa->key.tfm = macsec_alloc_tfm(sak, key_len, icv_len);
+	rx_sa->key.tfm = macsec_alloc_tfm(sak, key_len, icv_len,csid);
 	if (IS_ERR(rx_sa->key.tfm)) {
 		free_percpu(rx_sa->stats);
 		return PTR_ERR(rx_sa->key.tfm);
@@ -1620,13 +1651,13 @@ static struct macsec_rx_sc *create_rx_sc(struct net_device *dev, sci_t sci)
 }
 
 static int init_tx_sa(struct macsec_tx_sa *tx_sa, char *sak, int key_len,
-		      int icv_len)
+		      int icv_len,u64 csid)
 {
 	tx_sa->stats = alloc_percpu(struct macsec_tx_sa_stats);
 	if (!tx_sa->stats)
 		return -ENOMEM;
 
-	tx_sa->key.tfm = macsec_alloc_tfm(sak, key_len, icv_len);
+	tx_sa->key.tfm = macsec_alloc_tfm(sak, key_len, icv_len,csid);
 	if (IS_ERR(tx_sa->key.tfm)) {
 		free_percpu(tx_sa->stats);
 		return PTR_ERR(tx_sa->key.tfm);
@@ -1899,7 +1930,7 @@ static int macsec_add_rxsa(struct sk_buff *skb, struct genl_info *info)
 	}
 
 	err = init_rx_sa(rx_sa, nla_data(tb_sa[MACSEC_SA_ATTR_KEY]),
-			 secy->key_len, secy->icv_len);
+			 secy->key_len, secy->icv_len,secy->csid);
 	if (err < 0) {
 		kfree(rx_sa);
 		rtnl_unlock();
@@ -2054,7 +2085,7 @@ static int macsec_add_txsa(struct sk_buff *skb, struct genl_info *info)
 	}
 
 	err = init_tx_sa(tx_sa, nla_data(tb_sa[MACSEC_SA_ATTR_KEY]),
-			 secy->key_len, secy->icv_len);
+			 secy->key_len, secy->icv_len,secy->csid);
 	if (err < 0) {
 		kfree(tx_sa);
 		rtnl_unlock();
@@ -2555,11 +2586,17 @@ static int nla_put_secy(struct macsec_secy *secy, struct sk_buff *skb)
 {
 	struct macsec_tx_sc *tx_sc = &secy->tx_sc;
 	struct nlattr *secy_nest = nla_nest_start(skb, MACSEC_ATTR_SECY);
-	u64 csid;
+	u64 csid= secy->csid;
+
+	if(secy->key_len != 16 && secy->key_len != 32)
+		{
+			printk("nla_put_secy fehler1\n");
+			goto cancel;
+		}
 
 	if (!secy_nest)
 		return 1;
-
+	/*
 	switch (secy->key_len) {
 	case MACSEC_GCM_AES_128_SAK_LEN:
 		csid = MACSEC_DEFAULT_CIPHER_ID;
@@ -2570,7 +2607,7 @@ static int nla_put_secy(struct macsec_secy *secy, struct sk_buff *skb)
 	default:
 		goto cancel;
 	}
-
+	*/
 	if (nla_put_sci(skb, MACSEC_SECY_ATTR_SCI, secy->sci,
 			MACSEC_SECY_ATTR_PAD) ||
 	    nla_put_u64_64bit(skb, MACSEC_SECY_ATTR_CIPHER_SUITE,
@@ -3357,17 +3394,33 @@ static int macsec_changelink_common(struct net_device *dev,
 		secy->validate_frames = nla_get_u8(data[IFLA_MACSEC_VALIDATION]);
 
 	if (data[IFLA_MACSEC_CIPHER_SUITE]) {
-		switch (nla_get_u64(data[IFLA_MACSEC_CIPHER_SUITE])) {
-		case MACSEC_CIPHER_ID_GCM_AES_128:
-		case MACSEC_DEFAULT_CIPHER_ID:
-			secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
-			break;
-		case MACSEC_CIPHER_ID_GCM_AES_256:
-			secy->key_len = MACSEC_GCM_AES_256_SAK_LEN;
-			break;
-		default:
-			return -EINVAL;
-		}
+			switch (nla_get_u64(data[IFLA_MACSEC_CIPHER_SUITE])) {
+			case MACSEC_CIPHER_ID_GCM_AES_128:
+			case MACSEC_DEFAULT_CIPHER_ID:
+				secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
+				secy->csid = MACSEC_DEFAULT_CIPHER_ID;
+				break;
+			case MACSEC_CIPHER_ID_CHACHA_POLY_256:
+				secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
+				secy->csid = MACSEC_CIPHER_ID_CHACHA_POLY_256;
+				break;
+			case MACSEC_CIPHER_ID_GCM_AES_256:
+				secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
+				secy->csid = MACSEC_CIPHER_ID_GCM_AES_256;
+				break;
+			case MACSEC_CIPHER_ID_AEGIS128L_128:
+				secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
+				secy->csid = MACSEC_CIPHER_ID_AEGIS128L_128;
+				break;
+			case MACSEC_CIPHER_ID_MORUS640_128:
+				secy->key_len = MACSEC_GCM_AES_128_SAK_LEN;
+				secy->csid = MACSEC_CIPHER_ID_MORUS640_128;
+				break;
+			default:
+				return -EINVAL;
+
+
+			}
 	}
 
 	return 0;
@@ -3593,9 +3646,6 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
 	if (err < 0)
 		goto del_dev;
 
-	netif_stacked_transfer_operstate(real_dev, dev);
-	linkwatch_fire_event(dev);
-
 	macsec_generation++;
 
 	return 0;
@@ -3631,7 +3681,7 @@ static int macsec_validate_attr(struct nlattr *tb[], struct nlattr *data[],
 
 			dummy_tfm = macsec_alloc_tfm(dummy_key,
 						     DEFAULT_SAK_LEN,
-						     icv_len);
+						     icv_len, csid);
 			if (IS_ERR(dummy_tfm))
 				return PTR_ERR(dummy_tfm);
 			crypto_free_aead(dummy_tfm);
@@ -3641,6 +3691,9 @@ static int macsec_validate_attr(struct nlattr *tb[], struct nlattr *data[],
     switch (csid) {
 	case MACSEC_CIPHER_ID_GCM_AES_128:
 	case MACSEC_CIPHER_ID_GCM_AES_256:
+	case MACSEC_CIPHER_ID_CHACHA_POLY_256:
+	case MACSEC_CIPHER_ID_AEGIS128L_128:
+	case MACSEC_CIPHER_ID_MORUS640_128:
 	case MACSEC_DEFAULT_CIPHER_ID:
 		if (icv_len < MACSEC_MIN_ICV_LEN ||
 		    icv_len > MACSEC_STD_ICV_LEN)
@@ -3710,9 +3763,9 @@ static int macsec_fill_info(struct sk_buff *skb,
 {
 	struct macsec_secy *secy = &macsec_priv(dev)->secy;
 	struct macsec_tx_sc *tx_sc = &secy->tx_sc;
-	u64 csid;
+	u64 csid= secy->csid;
 
-	switch (secy->key_len) {
+	/*switch (secy->key_len) {
 	case MACSEC_GCM_AES_128_SAK_LEN:
 		csid = MACSEC_DEFAULT_CIPHER_ID;
 		break;
@@ -3721,7 +3774,7 @@ static int macsec_fill_info(struct sk_buff *skb,
 		break;
 	default:
 		goto nla_put_failure;
-	}
+	}*/
 
 	if (nla_put_sci(skb, IFLA_MACSEC_SCI, secy->sci,
 			IFLA_MACSEC_PAD) ||
