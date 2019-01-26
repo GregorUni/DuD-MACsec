@@ -673,7 +673,7 @@ static struct aead_request *macsec_alloc_req(struct crypto_aead *tfm,
 static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 				      struct net_device *dev)
 {
-	int ret;
+	int ret,i;
 	struct scatterlist *sg;
 	struct sk_buff *trailer;
 	unsigned char *iv;
@@ -778,6 +778,11 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 		return ERR_PTR(ret);
 	}
 	printk("iv encrypt %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7], iv[8], iv[9], iv[10], iv[11],  iv[12], iv[13], iv[14], iv[15]);
+	for(i = 0; i <= 40;i++)
+	{
+		printk("skb vor encrypt[%d] %x",i ,skb->data[i]);
+	}
+	printk("\n");
 	if (tx_sc->encrypt) {
 		int len = skb->len - macsec_hdr_len(sci_present) -
 			  secy->icv_len;
@@ -787,7 +792,10 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 		aead_request_set_crypt(req, sg, sg, 0, iv);
 		aead_request_set_ad(req, skb->len - secy->icv_len);
 	}
-
+	for(i = 0; i <= 40;i++)
+		{
+			printk("skb nach encrypt[%d] %x",i ,skb->data[i]);
+		}
 	macsec_skb_cb(skb)->req = req;
 	macsec_skb_cb(skb)->tx_sa = tx_sa;
 	aead_request_set_callback(req, 0, macsec_encrypt_done, skb);
@@ -955,7 +963,7 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
 				      sci_t sci,
 				      struct macsec_secy *secy)
 {
-	int ret;
+	int ret,i;
 	struct scatterlist *sg;
 	struct sk_buff *trailer;
 	unsigned char *iv;
@@ -995,6 +1003,11 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
 		return ERR_PTR(ret);
 	}
 	printk("iv decrypt  %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7], iv[8], iv[9], iv[10], iv[11],  iv[12], iv[13], iv[14], iv[15]);
+	for(i = 0; i <= 40;i++)
+			{
+				printk("skb vor decrypt[%d] %x",i ,skb->data[i]);
+			}
+	printk("\n");
 	if (hdr->tci_an & MACSEC_TCI_E) {
 		/* confidentiality: ethernet + macsec header
 		 * authenticated, encrypted payload
@@ -1014,6 +1027,11 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
 		aead_request_set_crypt(req, sg, sg, icv_len, iv);
 		aead_request_set_ad(req, skb->len - icv_len);
 	}
+
+	for(i = 0; i <= 40;i++)
+			{
+				printk("skb nach decrypt[%d] %x",i ,skb->data[i]);
+			}
 
 	macsec_skb_cb(skb)->req = req;
 	skb->dev = dev;
