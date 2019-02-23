@@ -88,7 +88,7 @@ struct gcm_iv {
 };
 
 /* Set additional MTU for fragmentation */
-#define ADDITIONAL_MTU 1468
+#define ADDITIONAL_MTU 1464
 
 struct macsec_fragmentation_buffer {
     sci_t sci;
@@ -550,9 +550,10 @@ static bool macsec_validate_skb(struct sk_buff *skb, u16 icv_len)
 static void macsec_fill_iv(unsigned char *iv, sci_t sci, u32 pn)
 {
 	struct gcm_iv *gcm_iv = (struct gcm_iv *)iv;
-
+	int i;
 	gcm_iv->sci = sci;
 	gcm_iv->pn = htonl(pn);
+
 }
 
 static struct macsec_eth_header *macsec_ethhdr(struct sk_buff *skb)
@@ -652,7 +653,6 @@ static struct aead_request *macsec_alloc_req(struct crypto_aead *tfm,
 	size = sizeof(struct aead_request) + crypto_aead_reqsize(tfm);
 	iv_offset = size;
 	size += crypto_aead_ivsize(tfm);
-
 	size = ALIGN(size, __alignof__(struct scatterlist));
 	sg_offset = size;
 	size += sizeof(struct scatterlist) * num_frags;
@@ -777,31 +777,28 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 		kfree_skb(skb);
 		return ERR_PTR(ret);
 	}
-	printk("iv encrypt %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7], iv[8], iv[9], iv[10], iv[11],  iv[12], iv[13], iv[14], iv[15]);
-	for(i = 0; i <= 40;i++)
-	{
-		printk("skb vor encrypt[%d] %x",i ,skb->data[i]);
-	}
-	printk("\n");
+
 	if (tx_sc->encrypt) {
+
 		int len = skb->len - macsec_hdr_len(sci_present) -
 			  secy->icv_len;
+		printk("int len %d", len);
+		printk("macsec_hdr_len(sci_present) %d", macsec_hdr_len(sci_present));
+		printk(" secy->icv_len %d",  secy->icv_len);
 		aead_request_set_crypt(req, sg, sg, len, iv);
 		aead_request_set_ad(req, macsec_hdr_len(sci_present));
 	} else {
 		aead_request_set_crypt(req, sg, sg, 0, iv);
 		aead_request_set_ad(req, skb->len - secy->icv_len);
 	}
-	for(i = 0; i <= 40;i++)
-		{
-			printk("skb nach encrypt[%d] %x",i ,skb->data[i]);
-		}
+
 	macsec_skb_cb(skb)->req = req;
 	macsec_skb_cb(skb)->tx_sa = tx_sa;
 	aead_request_set_callback(req, 0, macsec_encrypt_done, skb);
 
 	dev_hold(skb->dev);
 	ret = crypto_aead_encrypt(req);
+	printk("ret encrypt %d",ret);
 	if (ret == -EINPROGRESS) {
 		return ERR_PTR(ret);
 	} else if (ret != 0) {
@@ -811,7 +808,16 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 		macsec_txsa_put(tx_sa);
 		return ERR_PTR(-EINVAL);
 	}
+	/*for(i = 0; i <= 40;i++)
+		{
+			printk("skb nach encrypt[%d] %x",i ,skb->data[i]);
+		}
 
+	for(i = skb->len - 17; i <= skb->len;i++)
+			{
+				printk("macsec icv encrypt[%d] %x",i ,skb->data[i]);
+			}
+*/
 	dev_put(skb->dev);
 	aead_request_free(req);
 	macsec_txsa_put(tx_sa);
@@ -1003,11 +1009,19 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
 		return ERR_PTR(ret);
 	}
 	printk("iv decrypt  %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x %x \n", iv[0], iv[1], iv[2], iv[3], iv[4], iv[5], iv[6], iv[7], iv[8], iv[9], iv[10], iv[11],  iv[12], iv[13], iv[14], iv[15]);
-	for(i = 0; i <= 40;i++)
+	/*for(i = 0; i <= 40;i++)
 			{
 				printk("skb vor decrypt[%d] %x",i ,skb->data[i]);
 			}
 	printk("\n");
+	for(i = skb->len - 17; i <= skb->len;i++)
+					{
+						printk("macsec icv decrypt[%d] %x",i ,skb->data[i]);
+					}
+	*/
+	unsigned char *iv1 = kmalloc(16, GFP_ATOMIC);
+		memset(iv1,0,16);
+
 	if (hdr->tci_an & MACSEC_TCI_E) {
 		/* confidentiality: ethernet + macsec header
 		 * authenticated, encrypted payload
@@ -1028,18 +1042,21 @@ static struct sk_buff *macsec_decrypt(struct sk_buff *skb,
 		aead_request_set_ad(req, skb->len - icv_len);
 	}
 
-	for(i = 0; i <= 40;i++)
-			{
-				printk("skb nach decrypt[%d] %x",i ,skb->data[i]);
-			}
-
 	macsec_skb_cb(skb)->req = req;
 	skb->dev = dev;
 	aead_request_set_callback(req, 0, macsec_decrypt_done, skb);
 
 	dev_hold(dev);
 	ret = crypto_aead_decrypt(req);
-	printk("ret of decrypt %d",ret);
+/*	printk("ret of decrypt %d",ret);
+	for(i = 0; i <= 40;i++)
+				{
+					printk("skb nach decrypt[%d] %x",i ,skb->data[i]);
+				}
+	for(i = skb->len - 17; i <= skb->len;i++)
+				{
+					printk("macsec icv decrypt[%d] %x",i ,skb->data[i]);
+				}*/
 	if (ret == -EINPROGRESS) {
 		printk("decrypt error 6\n");
 		return ERR_PTR(ret);
@@ -3020,7 +3037,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
         printk("xmit Anfragen:\n");
         printk("macsec->real_dev->mtu %d \n",macsec->real_dev->mtu);
         printk("macsec_sectag_len(sci_present) %d \n",macsec_sectag_len(sci_present));
-        printk("secy->icv_len %d \n",secy->icv_len);
+        printk("len %d \n",skb->len);
         new_skb_len = macsec->real_dev->mtu - macsec_sectag_len(sci_present) - secy->icv_len - 2 + ETH_HLEN;// 2x Double ETH_PROTO
         printk("new_skb_len %ld \n",new_skb_len);
         printk("header length %d", macsec_sectag_len(sci_present) + ETH_HLEN);
@@ -3031,7 +3048,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             new_skb_len -= 60 - frag_len;
             frag_len = 60;
         }
-
+        //Allocate a new &sk_buff and assign it a usage count of one
         skb_frag = dev_alloc_skb(frag_len);
 
         if(!skb_frag) {
@@ -3046,10 +3063,15 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             old = skb;
             skb = skb_copy(skb, GFP_ATOMIC);
             consume_skb(old);
+            printk("skb wurde kopiert\n");
         }
         // +2 because of the extension bits at the end of the frame
-        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) + 2);
-        printk("header after skb_reserve %d \n", ETH_HLEN + macsec_extra_len(sci_present) + 2);
+        // Increase the headroom of an empty &sk_buff by reducing the tail room
+        // macsec_extra_len = sectagLen(10 (+ 8) Bytes) + ethernet hhdr (2 Bytes)
+        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) - 2);
+
+        printk("header after skb_reserve %d \n", ETH_HLEN + macsec_extra_len(sci_present) - 2);
+        printk("macsec_extra_len(sci_present) %d \n", macsec_extra_len(sci_present));
         skb_split(skb, skb_frag, new_skb_len);
 
         skb_reset_network_header(skb_frag);
