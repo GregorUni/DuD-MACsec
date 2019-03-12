@@ -214,6 +214,21 @@ eva() {
 		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
 		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
 
+	elif [[ $5 == mw ]]; then  #case macsec original with encryption
+		IP=$DEST_IP
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_orig_without_encryption.sh" 
+		config_macsec_orig_without_encryption
+		make_info $2 $4
+		eva_ping $2 $4 $IP
+		#sudo ip link set dev eno1 mtu 60
+                #eva_iperf $1 $2 60 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
+
 
 	else    #case no macsec no encryption
 	        IP=192.168.11.3
@@ -390,17 +405,36 @@ config_macsec_morus640_without_encryption()
 }
 config_macsec_orig_with_encryption()
 {
-sudo modprobe -r macsec
-	
+sudo modprobe -r macsec	
+cd ../macsec/orig
+sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
+	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
 	sudo modprobe -v macsec
 	sudo ip link add link eth0 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
-	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
 	sudo ip link set macsec0 type macsec encrypt on
+	cd ../../Evaluation
+}
+
+config_macsec_orig_without_encryption()
+{
+	cd ../macsec/orig
+	sudo modprobe -r macsec	
+	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
+	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
+	sudo modprobe -v macsec
+	sudo ip link add link eth0 macsec0 type macsec
+	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip link set dev macsec0 up
+	sudo ifconfig macsec0 10.10.12.1/24
+	sudo ip link set macsec0 type macsec encrypt off
+	cd ../../Evaluation
 }
 
 # first parameter is the value for the amount of tests
@@ -413,8 +447,11 @@ eva $1 "no-macsec" 1000 1468
 eva $1 "no-macsec" 1000 1500
 eva $1 "no-macsec" 1000 2936
 eva $1 "orig" 1468 1500 m
+eva $1 "orig" 1468 1500 mw
 eva $1 "orig-jumbo" 1500 9000 m
+eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
 eva $1 "orig-jumbo" 2936 9000 m
+eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
 eva $1 "macsec-aes(gcm)-we" 1000 1468 mwe
 eva $1 "macsec-aes(gcm)-e" 1000 1468 med
@@ -425,3 +462,4 @@ eva $1 "macsec-aegis128l-we" 1000 1468 awe
 eva $1 "macsec-morus640-e" 1000 1468 mme
 eva $1 "macsec-morus640-we" 1000 1468 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000?
+#denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
