@@ -3,7 +3,7 @@
 EVA_DIR=eva
 FPREFIX=$(date +%s)
 DEST_IP=10.10.12.2
-REMOTE_IP=141.76.55.202
+REMOTE_IP=192.168.11.3
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -27,7 +27,7 @@ make_info() {
 
   tc qdisc > $INFO_FILE
 	ip link show macsec0 >> $INFO_FILE
-	ip link show eno1>> $INFO_FILE
+	ip link show eth0>> $INFO_FILE
 	ip macsec show >> $INFO_FILE
 }
 
@@ -80,7 +80,7 @@ eva() {
 
 	if [[ $5 == mwe ]]; then #case macsec with aes(gcm) without encryption 
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_without_encryption.sh"  
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_without_encryption.sh"  
                 config_macsec_without_encryption
                 make_info $2 $4
                	eva_ping $2 $4 $IP
@@ -96,7 +96,7 @@ eva() {
 
 	elif [[ $5 == med ]]; then #case macsec with aes(gcm) and encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_encryption_default.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_encryption_default.sh"
 		config_macsec_encryption_default
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -110,7 +110,7 @@ eva() {
 		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
 	elif [[ $5 == cwe ]]; then #case macsec with chachapoly without encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_chacha_without_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_chacha_without_encryption.sh"
 		config_macsec_chacha_without_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -125,7 +125,7 @@ eva() {
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_chacha_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_chacha_encryption.sh"
 		config_macsec_chacha_without_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -140,7 +140,7 @@ eva() {
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_aegis128l_without_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_aegis128l_without_encryption.sh"
 		config_macsec_aegis128l_without_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -155,7 +155,7 @@ eva() {
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_aegis128l_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_aegis128l_encryption.sh"
 		config_macsec_aegis128l_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -170,7 +170,7 @@ eva() {
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_morus640_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_morus640_encryption.sh"
 		config_macsec_morus640_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -185,7 +185,7 @@ eva() {
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_morus640_without_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
@@ -199,10 +199,10 @@ eva() {
 		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
 
 	
-	elif [[ $5 == m ]]; then  #case macsec with morus640 without encryption
+	elif [[ $5 == m ]]; then  #case macsec original with encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/thesis/evaluation/config_macsec_morus640_without_encryption.sh"
-		#config_macsec_morus640_without_encryption
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_orig_with_encryption.sh"
+		config_macsec_orig_with_encryption
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -216,17 +216,17 @@ eva() {
 
 
 	else    #case no macsec no encryption
-	        IP=169.254.234.92
+	        IP=192.168.11.3
                 make_info $2 $4
-                eva_ping $2 $4 169.254.234.92
+                eva_ping $2 $4 192.168.11.3
                 #sudo ip link set dev eno1 mtu 60
                 #eva_iperf $1 $2 60 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
+		mtu_config_for_iperf3 $1 $2 164 192.168.11.3
+		mtu_config_for_iperf3 $1 $2 292 192.168.11.3
+		mtu_config_for_iperf3 $1 $2 548 192.168.11.3
+		mtu_config_for_iperf3 $1 $2 1060 192.168.11.3
+		mtu_config_for_iperf3 $1 $2 1436 192.168.11.3
+		mtu_config_for_iperf3 $1 $2 1550 192.168.11.3
 
 	fi
 }
@@ -234,8 +234,8 @@ eva() {
 mtu_config_for_iperf3()
 {
 #third value + 36 if the mtu of macsec0 is changed
-sudo ip link set dev eno1 mtu $3
-ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $3"
+sudo ip link set dev eth0 mtu $3
+ssh root@$REMOTE_IP "sudo ip link set dev eth0 mtu $3"
 sudo ip link set dev macsec0 mtu $((( $3  - 36 )))
 ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 eva_iperf $1 $2 $3 $4
@@ -247,10 +247,10 @@ config_macsec_without_encryption()
 {
 	sudo modprobe -r macsec
 	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
+	sudo ip link add link eth0 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -265,10 +265,10 @@ config_macsec_encryption_default()
 {
 	sudo modprobe -r macsec
 	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
+	sudo ip link add link eth0 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -280,10 +280,10 @@ config_macsec_chacha_without_encryption()
 	sudo modprobe -r macsec
 	sudo modprobe -v macsec
 	sudo modprobe -v chacha20poly1305
-	sudo ip link add link eno1 macsec0 type macsec cipher chacha-poly-256
+	sudo ip link add link eth0 macsec0 type macsec cipher chacha-poly-256
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -295,10 +295,10 @@ config_macsec_chacha_encryption()
 	sudo modprobe -r macsec
 	sudo modprobe -v macsec
 	sudo modprobe -v chacha20poly1305
-	sudo ip link add link eno1 macsec0 type macsec cipher chacha-poly-256
+	sudo ip link add link eth0 macsec0 type macsec cipher chacha-poly-256
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -316,10 +316,10 @@ config_macsec_aegis128l_without_encryption()
 
 	sudo modprobe -v macsec
 	sudo modprobe -v aegis128l
-	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
+	sudo ip link add link eth0 macsec0 type macsec cipher aegis128l-128
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -337,10 +337,10 @@ sudo modprobe -r macsec
 	sudo modprobe -v macsec
 	sudo modprobe -v aegis128l
 
-	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
+	sudo ip link add link eth0 macsec0 type macsec cipher aegis128l-128
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -359,10 +359,10 @@ config_macsec_morus640_encryption()
 	
 	sudo modprobe -v macsec
 	sudo modprobe -v morus640
-	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
+	sudo ip link add link eth0 macsec0 type macsec cipher morus640-128
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
@@ -379,14 +379,28 @@ config_macsec_morus640_without_encryption()
 	
 	sudo modprobe -v macsec
 	sudo modprobe -v morus640
-	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
+	sudo ip link add link eth0 macsec0 type macsec cipher morus640-128
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ifconfig macsec0 10.10.12.1/24
 	sudo ip link set macsec0 type macsec encrypt off
+}
+config_macsec_orig_with_encryption()
+{
+sudo modprobe -r macsec
+	
+	sudo modprobe -v macsec
+	sudo ip link add link eth0 macsec0 type macsec
+	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1
+	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	sudo ip link set dev macsec0 up
+	sudo ip link set dev macsec0 mtu 1514
+	sudo ifconfig macsec0 10.10.12.1/24
+	sudo ip link set macsec0 type macsec encrypt on
 }
 
 # first parameter is the value for the amount of tests
