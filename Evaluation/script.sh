@@ -409,19 +409,20 @@ sudo modprobe -r macsec
 # fourth parameter gives the packet size
 init
 make_info
-eva $1 "no-macsec" 1000 1468
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2936
-eva $1 "orig" 1468 1500 m
-eva $1 "orig-jumbo" 1500 9000 m
-eva $1 "orig-jumbo" 2936 9000 m
+#eva $1 "no-macsec" 1000 1468
+#eva $1 "no-macsec" 1000 1500
+#eva $1 "no-macsec" 1000 2936
+#eva $1 "orig" 1468 1500 m
+#eva $1 "orig-jumbo" 1500 9000 m
+#eva $1 "orig-jumbo" 2936 9000 m
 #testcases with original macsec
-eva $1 "macsec-aes(gcm)-we" 1000 1468 mwe
-eva $1 "macsec-aes(gcm)-e" 1000 1468 med
-eva $1 "macsec-chachapoly-we" 1000 1468 cwe
-eva $1 "macsec-chachapoly-e" 1000 1468 mce
-eva $1 "macsec-aegis128l-e" 1000 1468 ae
-eva $1 "macsec-aegis128l-we" 1000 1468 awe
-eva $1 "macsec-morus640-e" 1000 1468 mme
-eva $1 "macsec-morus640-we" 1000 1468 mmwe
+eva $1 "macsec-aesgcm-we" 1000 1468 mwe
+#eva $1 "macsec-aesgcm-e" 1000 1468 med
+#eva $1 "macsec-chachapoly-we" 1000 1468 cwe
+#eva $1 "macsec-chachapoly-e" 1000 1468 mce
+#eva $1 "macsec-aegis128l-e" 1000 1468 ae
+#eva $1 "macsec-aegis128l-we" 1000 1468 awe
+#eva $1 "macsec-morus640-e" 1000 1468 mme
+#eva $1 "macsec-morus640-we" 1000 1468 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000?
+# without macsec funktioniert nicht, weil mtu configuration
