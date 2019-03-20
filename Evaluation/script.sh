@@ -41,12 +41,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 110 - 32 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 238 - 32 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 494 - 32 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 1006 - 32 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 1382 - 32 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 10 -s $((( 1496 - 32 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 
 }
 

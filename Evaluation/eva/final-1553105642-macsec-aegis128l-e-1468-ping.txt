@@ -1,0 +1,49 @@
+PING 10.10.12.2 (10.10.12.2) 78(106) bytes of data.
+86 bytes from 10.10.12.2: icmp_seq=1 ttl=64 time=2.66 ms
+86 bytes from 10.10.12.2: icmp_seq=2 ttl=64 time=1.62 ms
+86 bytes from 10.10.12.2: icmp_seq=3 ttl=64 time=1.54 ms
+86 bytes from 10.10.12.2: icmp_seq=4 ttl=64 time=2.09 ms
+86 bytes from 10.10.12.2: icmp_seq=5 ttl=64 time=1.94 ms
+86 bytes from 10.10.12.2: icmp_seq=6 ttl=64 time=1.89 ms
+86 bytes from 10.10.12.2: icmp_seq=7 ttl=64 time=1.66 ms
+86 bytes from 10.10.12.2: icmp_seq=8 ttl=64 time=0.645 ms
+86 bytes from 10.10.12.2: icmp_seq=9 ttl=64 time=0.644 ms
+86 bytes from 10.10.12.2: icmp_seq=10 ttl=64 time=0.723 ms
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 38ms
+rtt min/avg/max/mdev = 0.644/1.545/2.664/0.645 ms, ipg/ewma 4.230/1.690 ms
+PING 10.10.12.2 (10.10.12.2) 206(234) bytes of data.
+214 bytes from 10.10.12.2: icmp_seq=1 ttl=64 time=0.896 ms
+214 bytes from 10.10.12.2: icmp_seq=2 ttl=64 time=0.623 ms
+214 bytes from 10.10.12.2: icmp_seq=3 ttl=64 time=0.615 ms
+214 bytes from 10.10.12.2: icmp_seq=4 ttl=64 time=0.656 ms
+214 bytes from 10.10.12.2: icmp_seq=6 ttl=64 time=0.611 ms
+214 bytes from 10.10.12.2: icmp_seq=7 ttl=64 time=0.603 ms
+214 bytes from 10.10.12.2: icmp_seq=8 ttl=64 time=0.605 ms
+214 bytes from 10.10.12.2: icmp_seq=9 ttl=64 time=0.607 ms
+214 bytes from 10.10.12.2: icmp_seq=10 ttl=64 time=0.610 ms
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 9 received, 10% packet loss, time 18ms
+rtt min/avg/max/mdev = 0.603/0.647/0.896/0.091 ms, ipg/ewma 2.031/0.711 ms
+PING 10.10.12.2 (10.10.12.2) 462(490) bytes of data.
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 28021ms
+
+PING 10.10.12.2 (10.10.12.2) 974(1002) bytes of data.
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 28052ms
+
+PING 10.10.12.2 (10.10.12.2) 1350(1378) bytes of data.
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 28051ms
+
+PING 10.10.12.2 (10.10.12.2) 1464(1492) bytes of data.
+
+--- 10.10.12.2 ping statistics ---
+10 packets transmitted, 0 received, 100% packet loss, time 28028ms
+
