@@ -28,7 +28,7 @@ make_info() {
   tc qdisc > $INFO_FILE
 	ip link show macsec0 >> $INFO_FILE
 	ip link show eth0>> $INFO_FILE
-	ip macsec show >> $INFO_FILE
+	#ip macsec show >> $INFO_FILE
 }
 
 
@@ -46,7 +46,7 @@ eva_ping() {
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 10 -s $((( 1492 - 28 ))) #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 
 }
 
@@ -80,12 +80,18 @@ eva() {
 
 	if [[ $5 == mwe ]]; then #case macsec with aes(gcm) without encryption 
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_without_encryption.sh"  
+		echo -e "Start Test"
+		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_without_encryption.sh"
+		echo -e "ssh config is over"
                 config_macsec_without_encryption
+		echo -e "normal config is over"
                 make_info $2 $4
+		echo -e "make info is over"
                	eva_ping $2 $4 $IP
+		echo -e "ping is over"
 		#sudo ip link set dev eno1 mtu 60 #prints "eno1: Invalid MTU 60 requested, hw min 68" in dmesg
                 #eva_iperf $1 $2 60 $DEST_IP
+		echo -e "mtu_config is going to start"
 		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
 		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
 		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
@@ -185,6 +191,7 @@ eva() {
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/pi/DuD-MACsec/Evaluation/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
 		make_info $2 $4
