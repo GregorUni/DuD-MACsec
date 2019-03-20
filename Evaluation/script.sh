@@ -443,15 +443,15 @@ config_macsec_orig_without_encryption()
 # fourth parameter gives the packet size
 init
 make_info
-eva $1 "no-macsec" 1000 1468
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2936
-eva $1 "orig" 1468 1500 m
-eva $1 "orig" 1468 1500 mw
-eva $1 "orig-jumbo" 1500 9000 m
-eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
-eva $1 "orig-jumbo" 2936 9000 m
-eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
+#eva $1 "no-macsec" 1000 1468
+#eva $1 "no-macsec" 1000 1500
+#eva $1 "no-macsec" 1000 2936
+#eva $1 "orig" 1468 1500 m
+#eva $1 "orig" 1468 1500 mw
+#eva $1 "orig-jumbo" 1500 9000 m
+#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
+#eva $1 "orig-jumbo" 2936 9000 m
+#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
 eva $1 "macsec-aesgcm-we" 1000 1468 mwe
 #eva $1 "macsec-aesgcm-e" 1000 1468 med
