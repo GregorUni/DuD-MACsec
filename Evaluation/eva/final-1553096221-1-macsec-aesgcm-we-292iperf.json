@@ -1,0 +1,18 @@
+[Connecting to host 10.10.12.2, port 5201
+[  5] local 10.10.12.1 port 55116 connected to 10.10.12.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  19.1 KBytes   156 Kbits/sec    2    244 Bytes       
+[  5]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1    244 Bytes       
+[  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0    244 Bytes       
+[  5]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1    244 Bytes       
+[  5]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0    244 Bytes       
+[  5]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0    244 Bytes       
+[  5]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1    244 Bytes       
+[  5]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0    244 Bytes       
+[  5]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0    244 Bytes       
+[  5]  10.00-19.88  sec  0.00 Bytes  0.00 bits/sec    1    244 Bytes       
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-19.88  sec  19.1 KBytes  7.85 Kbits/sec    6             sender
+[  5]   0.00-19.88  sec  0.00 Bytes  0.00 bits/sec                  receiver
+]
