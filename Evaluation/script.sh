@@ -258,8 +258,8 @@ mtu_config_for_iperf3()
 #third value + 36 if the mtu of macsec0 is changed
 sudo ip link set dev eth0 mtu $3
 ssh root@$REMOTE_IP "sudo ip link set dev eth0 mtu $3"
-sudo ip link set dev macsec0 mtu $((( $3  - 40 ))) #-40 oder -32??
-ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 40 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36 ))) #-40 oder -32??
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 eva_iperf $1 $2 $3 $4
 }
 
