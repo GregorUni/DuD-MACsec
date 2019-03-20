@@ -275,6 +275,7 @@ config_macsec_without_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 	
 	
@@ -292,6 +293,7 @@ config_macsec_encryption_default()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 }
 
@@ -306,6 +308,7 @@ config_macsec_chacha_without_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 }
 
@@ -320,6 +323,7 @@ config_macsec_chacha_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 }
 
@@ -340,6 +344,7 @@ config_macsec_aegis128l_without_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 }
 
@@ -360,6 +365,7 @@ sudo modprobe -r macsec
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 
 }
@@ -381,6 +387,7 @@ config_macsec_morus640_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 }
 config_macsec_morus640_without_encryption()
@@ -400,6 +407,7 @@ config_macsec_morus640_without_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 }
 config_macsec_orig_with_encryption()
@@ -415,6 +423,7 @@ sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 	cd ../../Evaluation
 }
@@ -432,6 +441,7 @@ config_macsec_orig_without_encryption()
 	sudo ip macsec add macsec0 rx address b8:27:eb:27:9a:81 port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
+sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 	cd ../../Evaluation
 }
