@@ -59,7 +59,7 @@ eva_iperf() {
 
     for i in `seq 1 $1`; do
         echo -e "Start iperf3 #$i"
-        sudo timeout 20 iperf3 -c $4 >> $BANDWIDTH_FILE
+        sudo timeout 20 iperf3 -Jc $4 >> $BANDWIDTH_FILE
         if [ $? -ne 0 ]; then
             echo -e "${RED}iperf3 error${NC}"
             # i have to write a more complex error method so that if an error occurs the macsec module is loaded again (with a 60 sec pause)
@@ -258,7 +258,7 @@ mtu_config_for_iperf3()
 #third value + 36 if the mtu of macsec0 is changed
 sudo ip link set dev eth0 mtu $3
 ssh root@$REMOTE_IP "sudo ip link set dev eth0 mtu $3"
-sudo ip link set dev macsec0 mtu $((( $3  - 36 )))
+sudo ip link set dev macsec0 mtu $((( $3  - 36 ))) #-40 oder -32??
 ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 eva_iperf $1 $2 $3 $4
 }
