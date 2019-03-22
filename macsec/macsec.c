@@ -3224,7 +3224,8 @@ static int macsec_change_mtu(struct net_device *dev, int new_mtu)
 {
 	struct macsec_dev *macsec = macsec_priv(dev);
 	unsigned int extra = macsec->secy.icv_len + macsec_extra_len(true);
-
+	printk("%d\n", extra);
+	printk("%d\n",macsec->real_dev->mtu);
     if (macsec->real_dev->mtu - extra  + ADDITIONAL_MTU < new_mtu)
         return -ERANGE;
 
