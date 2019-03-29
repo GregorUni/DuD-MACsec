@@ -1117,6 +1117,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
     struct macsec_dev *macsec;
     sci_t sci;
     u32 pn;
+    int ret;
     bool cbit;
     struct pcpu_rx_sc_stats *rxsc_stats;
     struct pcpu_secy_stats *secy_stats;
