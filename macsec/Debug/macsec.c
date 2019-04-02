@@ -1074,6 +1074,7 @@ static void handle_not_macsec(struct sk_buff *skb)
 	 * Strict, frames without a SecTAG are received, counted, and
 	 * delivered to the Controlled Port
 	 */
+	printk("macsec not_macsec start");
 	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
 		struct sk_buff *nskb;
 		struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
@@ -1087,9 +1088,10 @@ static void handle_not_macsec(struct sk_buff *skb)
 
 		/* deliver on this port */
 		nskb = skb_clone(skb, GFP_ATOMIC);
-		if (!nskb)
+		if (!nskb){
+			printk("macsec not_macsec fehler 1");
 			break;
-
+		}
 		nskb->dev = macsec->secy.netdev;
 
 		if (netif_rx(nskb) == NET_RX_SUCCESS) {
@@ -1187,7 +1189,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 		if (sc) {
 			secy = &macsec->secy;
 			rx_sc = sc;
-			printk("macsec_handle_frame fehler6\n");
+			//printk("macsec_handle_frame fehler6\n");
 			break;
 		}
 	}
