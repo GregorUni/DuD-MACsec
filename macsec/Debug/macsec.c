@@ -1131,6 +1131,8 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 }
 	hdr = macsec_ethhdr(skb);
 	if (hdr->eth.h_proto != htons(ETH_P_MACSEC)) {
+	printk("hdr->eth.h_proto %d", hdr->eth.h_proto);
+	printk("htons(ETH_P_MACSEC) %d",htons(ETH_P_MACSEC));
 		handle_not_macsec(skb);
 		/* and deliver to the uncontrolled port */
 		printk("macsec_handle_frame fehler2\n");
