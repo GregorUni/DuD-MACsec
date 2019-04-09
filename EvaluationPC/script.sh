@@ -31,7 +31,6 @@ make_info() {
 	#ip macsec show >> $INFO_FILE
 }
 
-
 eva_ping() {
   #echo -e "${GREEN}Start RTT Evaluation of $1 with MTU $2${NC}"
   PING_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-ping.txt
@@ -76,14 +75,17 @@ eva_iperf() {
 eva() {
 #frame sizes to test-> 60 128 256 512 1024 1400 1514
 	 echo -e "Erster Parameter:$1 Zweiter:$2 Dritter:$3 Vierter:$4 Fünfter: $5"
-sudo ip link set dev eno1 mtu 1514
-ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
+
+ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
+sudo ip link set dev eno1 mtu $4
 	if [[ $5 == mwe ]]; then #case macsec with aes(gcm) without encryption 
 		IP=$DEST_IP
 		echo -e "Start Test"
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_without_encryption.sh"
 		echo -e "ssh config is over"
                 config_macsec_without_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36))) #-40 oder -32??
 		echo -e "normal config is over"
                 make_info $2 $4
 		echo -e "make info is over"
@@ -104,6 +106,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_encryption_default.sh"
 		config_macsec_encryption_default
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -118,6 +122,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_without_encryption.sh"
 		config_macsec_chacha_without_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -133,6 +139,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_encryption.sh"
 		config_macsec_chacha_without_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -148,6 +156,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_without_encryption.sh"
 		config_macsec_aegis128l_without_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -163,6 +173,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_encryption.sh"
 		config_macsec_aegis128l_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -178,6 +190,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_encryption.sh"
 		config_macsec_morus640_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -194,6 +208,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
+		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+		sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -210,6 +226,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_with_encryption.sh"
 		config_macsec_orig_with_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -226,6 +244,8 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_without_encryption.sh" 
 		echo -e "mtu_config is "
 		config_macsec_orig_without_encryption
+ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -239,17 +259,18 @@ ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu 1514"
 
 
 	else    #case no macsec no encryption
+		echo -e "ethernet"
 		IP=169.254.234.92
                 make_info $2 $4
-                eva_ping $2 $4 $REMOTE_IP
+                eva_ping $2 $4 169.254.234.92
                 #sudo ip link set dev eno1 mtu 60
                 #eva_iperf $1 $2 60 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 164 $IP
-		mtu_config_for_iperf3 $1 $2 292 $IP
-		mtu_config_for_iperf3 $1 $2 548 $IP
-		mtu_config_for_iperf3 $1 $2 1060 $IP
-		mtu_config_for_iperf3 $1 $2 1436 $IP
-		mtu_config_for_iperf3 $1 $2 1550 $IP
+		mtu_config_for_iperf3 $1 $2 164 169.254.234.92
+		mtu_config_for_iperf3 $1 $2 292 169.254.234.92
+		mtu_config_for_iperf3 $1 $2 548 169.254.234.92
+		mtu_config_for_iperf3 $1 $2 1060 169.254.234.92
+		mtu_config_for_iperf3 $1 $2 1436 169.254.234.92
+		mtu_config_for_iperf3 $1 $2 1550 169.254.234.92
 
 	fi
 }
@@ -258,10 +279,10 @@ mtu_config_for_iperf3()
 {
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
-ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $3"
-sudo ip link set dev eno1 mtu $3
-ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
-sudo ip link set dev macsec0 mtu $((( $3  - 36))) #-40 oder -32??
+#ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $3"
+#sudo ip link set dev eno1 mtu $3
+#ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+#sudo ip link set dev macsec0 mtu $((( $3  - 36))) #-40 oder -32??
 sleep 2
 eva_iperf $1 $2 $3 $4
 
@@ -453,28 +474,28 @@ sudo ip link set dev macsec0 mtu 1514
 
 # first parameter is the value for the amount of tests
 # second parameter give a short explanation
-# third parameter gives the mtu-> third parameter isnt used...
-# fourth parameter gives the packet size
+# third parameter gives the macsec0 mtu-> third parameter isnt used...
+# fourth parameter eno 1
 init
 make_info
-#eva $1 "no-macsec" 1000 1468
-#eva $1 "no-macsec" 1000 1500
-#eva $1 "no-macsec" 1000 2936
-#eva $1 "orig" 1468 1500 m
-#eva $1 "orig" 1468 1500 mw
+eva $1 "no-macsec" 1000 1464
+eva $1 "no-macsec" 1000 1500
+eva $1 "no-macsec" 1000 2932
+#eva $1 "orig" 1464 1500 m
+#eva $1 "orig" 1464 1500 mw
 #eva $1 "orig-jumbo" 1500 9000 m
 #eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
 #eva $1 "orig-jumbo" 2936 9000 m
 #eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
-#eva $1 "macsec-aesgcm-we" 1000 1468 mwe
-#eva $1 "macsec-aesgcm-e" 1000 1468 med
-#eva $1 "macsec-chachapoly-we" 1000 1468 cwe
-#eva $1 "macsec-chachapoly-e" 1000 1468 mce
-#eva $1 "macsec-aegis128l-e" 1000 1468 ae
+eva $1 "macsec-aesgcm-we" 1000 1468 mwe
+eva $1 "macsec-aesgcm-e" 1000 1468 med
+eva $1 "macsec-chachapoly-we" 1000 1468 cwe
+eva $1 "macsec-chachapoly-e" 1000 1468 mce
+eva $1 "macsec-aegis128l-e" 1000 1468 ae
 #eva $1 "macsec-aegis128l-we" 1000 1468 awe
 #eva $1 "macsec-morus640-e" 1000 1468 mme
-eva $1 "macsec-morus640-we" 1000 1468 mmwe
+#eva $1 "macsec-morus640-we" 1000 1468 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000?
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
