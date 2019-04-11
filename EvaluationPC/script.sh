@@ -356,12 +356,6 @@ sudo ip link set dev macsec0 mtu 1514
 config_macsec_aegis128l_without_encryption()
 {
 	sudo modprobe -r macsec
-	
-
-	#sudo cd /home/test1/linux-4.16.16/crypto
-	#sudo bash aegis128l.sh
-	#sudo cd ~
-
 	sudo modprobe -v macsec
 	sudo modprobe -v aegis128l
 	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
@@ -377,14 +371,8 @@ sudo ip link set dev macsec0 mtu 1514
 config_macsec_aegis128l_encryption()
 {
 sudo modprobe -r macsec
-	
-
-	#sudo cd /home/test1/linux-4.16.16/crypto
-	#sudo bash aegis128l.sh
-	#sudo cd ~
 	sudo modprobe -v macsec
 	sudo modprobe -v aegis128l
-
 	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
 	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
@@ -399,12 +387,6 @@ sudo ip link set dev macsec0 mtu 1514
 config_macsec_morus640_encryption()
 {
 	sudo modprobe -r macsec
-	
-
-	#sudo cd /home/test1/linux-4.16.16/crypto
-	#sudo bash morus.sh
-	#sudo cd ~
-	
 	sudo modprobe -v macsec
 	sudo modprobe -v morus640
 	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
@@ -419,12 +401,6 @@ sudo ip link set dev macsec0 mtu 1514
 config_macsec_morus640_without_encryption()
 {
 	sudo modprobe -r macsec
-	
-
-	#sudo cd /home/test1/linux-4.16.16/crypto
-	#sudo bash morus.sh
-	#sudo cd ~
-	
 	sudo modprobe -v macsec
 	sudo modprobe -v morus640
 	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
@@ -438,38 +414,41 @@ config_macsec_morus640_without_encryption()
 }
 config_macsec_orig_with_encryption()
 {
-	sudo modprobe -r macsec	
-	cd . ../macsec/orig/
-	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
-	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-	sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt on
-	cd . ../../EvaluationPC/
+	#sudo modprobe -r macsec	
+	#cd . ../macsec/orig/
+	#sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
+	#sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
+	#sudo modprobe -v macsec
+	#sudo ip link add link eno1 macsec0 type macsec
+	#sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
+	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
+	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	#sudo ip link set dev macsec0 up
+	#sudo ifconfig macsec0 10.10.12.1/24
+	#sudo ip link set dev macsec0 mtu 1514
+	#sudo ip link set macsec0 type macsec encrypt on
+	bash ../macsec/orig/config_macsec_orig_with_encryption.sh
+	cd ../../EvaluationPC/
 }
 
 config_macsec_orig_without_encryption()
 {
-	cd . ../macsec/orig/
-	sudo modprobe -r macsec	
-	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
-	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-	sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt off
-	cd . ../../EvaluationPC/
+	#cd . ../macsec/orig/
+	#sudo modprobe -r macsec	
+	#sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
+	#sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
+	#sudo modprobe -v macsec
+	#sudo ip link add link eno1 macsec0 type macsec
+	#sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
+	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
+	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
+	#sudo ip link set dev macsec0 up
+	#sudo ifconfig macsec0 10.10.12.1/24
+	#sudo ip link set dev macsec0 mtu 1514
+	#sudo ip link set macsec0 type macsec encrypt off
+	#cd . ../../EvaluationPC/
+	bash ../macsec/orig/config_macsec_orig_without_encryption.sh
+	cd ../../EvaluationPC/
 }
 
 # first parameter is the value for the amount of tests
