@@ -206,7 +206,7 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/macsec/orig/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 		sudo ip link set dev macsec0 mtu $((( $3  - 36)))
@@ -224,7 +224,7 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_with_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/macsec/orig/config_macsec_orig_with_encryption_remote.sh"
 		config_macsec_orig_with_encryption
 ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 sudo ip link set dev macsec0 mtu $((( $3  - 36)))
@@ -241,11 +241,11 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 
 	elif [[ $5 == mw ]]; then  #case macsec original with encryption
 		echo -e "mtu_config"
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_without_encryption.sh" 
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_without_encryption_remote.sh" 
 		echo -e "mtu_config is "
 		config_macsec_orig_without_encryption
-ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
-sudo ip link set dev macsec0 mtu $((( $3  - 36)))
+		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
+		sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
 		eva_ping $2 $4 $IP
 		#sudo ip link set dev eno1 mtu 60
@@ -428,7 +428,6 @@ config_macsec_orig_with_encryption()
 	#sudo ip link set dev macsec0 mtu 1514
 	#sudo ip link set macsec0 type macsec encrypt on
 	bash ../macsec/orig/config_macsec_orig_with_encryption.sh
-	cd ../../EvaluationPC/
 }
 
 config_macsec_orig_without_encryption()
@@ -448,7 +447,6 @@ config_macsec_orig_without_encryption()
 	#sudo ip link set macsec0 type macsec encrypt off
 	#cd . ../../EvaluationPC/
 	bash ../macsec/orig/config_macsec_orig_without_encryption.sh
-	cd ../../EvaluationPC/
 }
 
 # first parameter is the value for the amount of tests
