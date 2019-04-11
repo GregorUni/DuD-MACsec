@@ -438,9 +438,9 @@ sudo ip link set dev macsec0 mtu 1514
 }
 config_macsec_orig_with_encryption()
 {
-sudo modprobe -r macsec	
-cd ../macsec/orig
-sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
+	sudo modprobe -r macsec	
+	cd ../macsec/orig
+	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
 	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
 	sudo modprobe -v macsec
 	sudo ip link add link eno1 macsec0 type macsec
@@ -449,7 +449,7 @@ sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
 	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
+	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 	cd ../../Evaluation
 }
@@ -467,7 +467,7 @@ config_macsec_orig_without_encryption()
 	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
+	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
 	cd ../../Evaluation
 }
@@ -478,21 +478,21 @@ sudo ip link set dev macsec0 mtu 1514
 # fourth parameter eno 1
 init
 make_info
-eva $1 "no-macsec" 1000 1464
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2932
-#eva $1 "orig" 1464 1500 m
-#eva $1 "orig" 1464 1500 mw
-#eva $1 "orig-jumbo" 1500 9000 m
-#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
-#eva $1 "orig-jumbo" 2936 9000 m
-#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
+#eva $1 "no-macsec" 1000 1464
+#eva $1 "no-macsec" 1000 1500
+#eva $1 "no-macsec" 1000 2932
+eva $1 "orig" 1464 1500 m
+eva $1 "orig" 1464 1500 mw
+eva $1 "orig-jumbo" 1500 9000 m
+eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
+eva $1 "orig-jumbo" 2936 9000 m
+eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
-eva $1 "macsec-aesgcm-we" 1000 1468 mwe
-eva $1 "macsec-aesgcm-e" 1000 1468 med
-eva $1 "macsec-chachapoly-we" 1000 1468 cwe
-eva $1 "macsec-chachapoly-e" 1000 1468 mce
-eva $1 "macsec-aegis128l-e" 1000 1468 ae
+#eva $1 "macsec-aesgcm-we" 1000 1468 mwe
+#eva $1 "macsec-aesgcm-e" 1000 1468 med
+#eva $1 "macsec-chachapoly-we" 1000 1468 cwe
+#eva $1 "macsec-chachapoly-e" 1000 1468 mce
+#eva $1 "macsec-aegis128l-e" 1000 1468 ae
 #eva $1 "macsec-aegis128l-we" 1000 1468 awe
 #eva $1 "macsec-morus640-e" 1000 1468 mme
 #eva $1 "macsec-morus640-we" 1000 1468 mmwe
