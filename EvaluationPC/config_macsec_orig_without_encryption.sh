@@ -1,5 +1,5 @@
 sudo modprobe -r macsec	
-cd ../macsec/orig
+cd . ../macsec/orig/
 sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
 sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
 sudo modprobe -v macsec
@@ -11,4 +11,4 @@ sudo ip link set dev macsec0 up
 sudo ifconfig macsec0 10.10.12.2/24
 sudo ip link set dev macsec0 mtu 1514
 sudo ip link set macsec0 type macsec encrypt off
-sudo cd ../../EvaluationPC
+cd . ../../EvaluationPC/
