@@ -439,7 +439,7 @@ sudo ip link set dev macsec0 mtu 1514
 config_macsec_orig_with_encryption()
 {
 	sudo modprobe -r macsec	
-	cd ../macsec/orig
+	sudo cd ../macsec/orig
 	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
 	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
 	sudo modprobe -v macsec
@@ -451,7 +451,7 @@ config_macsec_orig_with_encryption()
 	sudo ifconfig macsec0 10.10.12.1/24
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
-	cd ../../Evaluation
+	sudo cd ../../EvaluationPC
 }
 
 config_macsec_orig_without_encryption()
@@ -469,7 +469,7 @@ config_macsec_orig_without_encryption()
 	sudo ifconfig macsec0 10.10.12.1/24
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
-	cd ../../Evaluation
+	cd ../../EvaluationPC
 }
 
 # first parameter is the value for the amount of tests

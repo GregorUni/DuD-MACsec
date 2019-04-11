@@ -11,3 +11,4 @@ sudo ip link set dev macsec0 up
 sudo ifconfig macsec0 10.10.12.2/24
 sudo ip link set dev macsec0 mtu 1514
 sudo ip link set macsec0 type macsec encrypt on
+sudo cd ../../EvaluationPC
