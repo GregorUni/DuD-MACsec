@@ -138,7 +138,7 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
 		IP=$DEST_IP
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_encryption.sh"
-		config_macsec_chacha_without_encryption
+		config_macsec_chacha_encryption
 ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		make_info $2 $4
@@ -206,7 +206,7 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/macsec/orig/config_macsec_morus640_without_encryption.sh"
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 		sudo ip link set dev macsec0 mtu $((( $3  - 36)))
@@ -439,16 +439,34 @@ make_info
 #eva $1 "orig-jumbo" 1500 9000 m
 #eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
 #eva $1 "orig-jumbo" 2936 9000 m
-eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
-#testcases with original macsec
-eva $1 "macsec-aesgcm-e" 1000 1468 med
-eva $1 "macsec-aesgcm-we" 1000 1468 mwe
-#eva $1 "macsec-chachapoly-we" 1000 1468 cwe
-#eva $1 "macsec-chachapoly-e" 1000 1468 mce
-#eva $1 "macsec-aegis128l-e" 1000 1468 ae
-#eva $1 "macsec-aegis128l-we" 1000 1468 awe
-#eva $1 "macsec-morus640-e" 1000 1468 mme
-#eva $1 "macsec-morus640-we" 1000 1468 mmwe
+#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
+#testcases with frag 
+#eva $1 "macsec-aesgcm-e-1500" 1500 1500 med
+#eva $1 "macsec-aesgcm-we-1500" 1500 1500 mwe
+eva $1 "macsec-chachapoly-we-1500" 1500 1500 cwe
+eva $1 "macsec-chachapoly-e-1500" 1500 1500 mce
+#eva $1 "macsec-aegis128l-e-1500" 1500 1500 ae
+#eva $1 "macsec-aegis128l-we-1500" 1500 1500 awe
+#eva $1 "macsec-morus640-e-1500" 1500 1500 mme
+eva $1 "macsec-morus640-we-1500" 1500 1500 mmwe
+############ 
+#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med
+#eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+#eva $1 "macsec-chachapoly-we-1464" 1464 1500 cwe
+#eva $1 "macsec-chachapoly-e-1464" 1464 1500 mce
+#eva $1 "macsec-aegis128l-e-1464" 1464 1500 ae
+#eva $1 "macsec-aegis128l-we-1464" 1464 1500 awe
+#eva $1 "macsec-morus640-e-1464" 1464 1500 mme
+#eva $1 "macsec-morus640-we-1464" 1464 1500 mmwe
+############
+#eva $1 "macsec-aesgcm-e-2936" 2936 1500 med
+#eva $1 "macsec-aesgcm-we-2936" 2936 1500 mwe
+#eva $1 "macsec-chachapoly-we-2936" 2936 1500 cwe
+#eva $1 "macsec-chachapoly-e-2936" 2936 1500 mce
+#eva $1 "macsec-aegis128l-e-2936" 2936 1500 ae
+#eva $1 "macsec-aegis128l-we-2936" 2936 1500 awe
+#eva $1 "macsec-morus640-e-2936" 2936 1500 mme
+#eva $1 "macsec-morus640-we-2936" 2936 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000?
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
