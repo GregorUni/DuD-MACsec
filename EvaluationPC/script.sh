@@ -224,7 +224,7 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 		IP=$DEST_IP
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/macsec/orig/config_macsec_orig_with_encryption_remote.sh"
+		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption_remote.sh"
 		config_macsec_orig_with_encryption
 ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
 sudo ip link set dev macsec0 mtu $((( $3  - 36)))
@@ -239,9 +239,9 @@ sudo ip link set dev macsec0 mtu $((( $3  - 36)))
 		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
 		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
 
-	elif [[ $5 == mw ]]; then  #case macsec original with encryption
+	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		echo -e "mtu_config"
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_orig_without_encryption_remote.sh" 
+		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_without_encryption_remote.sh" 
 		echo -e "mtu_config is "
 		config_macsec_orig_without_encryption
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
@@ -429,7 +429,7 @@ config_macsec_orig_with_encryption()
 	#sudo ip link set macsec0 type macsec encrypt on
 	#alias proj="cd ../macsec/orig/"
 	cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh
-	cd home/test1/DuD-MACsec/EvaluationPC/
+	cd /home/test1/DuD-MACsec/EvaluationPC/
 	#alias proj="cd ../../EvaluationPC/"
 }
 
@@ -450,7 +450,7 @@ config_macsec_orig_without_encryption()
 	#sudo ip link set macsec0 type macsec encrypt off
 	#cd . ../../EvaluationPC/
 	cd /home/test1/DuD-MACsec/macsec/orig/; sh config_macsec_orig_without_encryption.sh
-	cd home/test1/DuD-MACsec/EvaluationPC/
+	cd /home/test1/DuD-MACsec/EvaluationPC/
 
 }
 
