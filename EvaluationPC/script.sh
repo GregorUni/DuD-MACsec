@@ -319,7 +319,7 @@ config_macsec_encryption_default()
 	sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
 	sudo ip link set dev macsec0 up
 	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
+	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt on
 }
 
@@ -428,7 +428,7 @@ config_macsec_orig_with_encryption()
 	#sudo ip link set dev macsec0 mtu 1514
 	#sudo ip link set macsec0 type macsec encrypt on
 	#alias proj="cd ../macsec/orig/"
-	bash ../macsec/orig/config_macsec_orig_with_encryption.sh
+	sh /home/test1/DuD-MACsec/macsec/orig/config_macsec_orig_with_encryption.sh
 	#alias proj="cd ../../EvaluationPC/"
 }
 
@@ -448,9 +448,9 @@ config_macsec_orig_without_encryption()
 	#sudo ip link set dev macsec0 mtu 1514
 	#sudo ip link set macsec0 type macsec encrypt off
 	#cd . ../../EvaluationPC/
-	alias proj="cd ../macsec/orig/"
-	bash ../macsec/orig/config_macsec_orig_without_encryption.sh
-	alias proj="cd ../../EvaluationPC/"
+	alias proj="cd /home/test1/DuD-MACsec/macsec/orig/"
+	sh /home/test1/DuD-MACsec/macsec/orig/config_macsec_orig_without_encryption.sh
+	alias proj="cd /home/test1/DuD-MACsec/EvaluationPC/"
 }
 
 # first parameter is the value for the amount of tests
@@ -469,7 +469,7 @@ eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
 eva $1 "orig-jumbo" 2936 9000 m
 eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
-#eva $1 "macsec-aesgcm-we" 1000 1468 mwe
+eva $1 "macsec-aesgcm-we" 1000 1468 mwe
 #eva $1 "macsec-aesgcm-e" 1000 1468 med
 #eva $1 "macsec-chachapoly-we" 1000 1468 cwe
 #eva $1 "macsec-chachapoly-e" 1000 1468 mce

@@ -1,6 +1,5 @@
-sudo modprobe -r macsec	
-	sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-	sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
+	sudo modprobe -r macsec	
+	sudo insmod macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
 	sudo modprobe -v macsec
 	sudo ip link add link eno1 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
