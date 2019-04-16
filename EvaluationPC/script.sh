@@ -310,6 +310,7 @@ config_macsec_encryption_default()
 
 	sudo modprobe -r macsec
 	cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
+	cd /home/test1/DuD-MACsec/EvaluationPC/
 	sudo modprobe -v macsec
 	sudo ip link add link eno1 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
@@ -433,15 +434,15 @@ make_info
 #eva $1 "no-macsec" 1000 1464
 #eva $1 "no-macsec" 1000 1500
 #eva $1 "no-macsec" 1000 2932
-eva $1 "orig" 1464 1500 m
-eva $1 "orig" 1464 1500 mw
-eva $1 "orig-jumbo" 1500 9000 m
-eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
-eva $1 "orig-jumbo" 2936 9000 m
+#eva $1 "orig" 1464 1500 m
+#eva $1 "orig" 1464 1500 mw
+#eva $1 "orig-jumbo" 1500 9000 m
+#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw
+#eva $1 "orig-jumbo" 2936 9000 m
 eva $1 "orig-jumbo-without-encryption" 2936 9000 mw
 #testcases with original macsec
+eva $1 "macsec-aesgcm-e" 1000 1468 med
 eva $1 "macsec-aesgcm-we" 1000 1468 mwe
-#eva $1 "macsec-aesgcm-e" 1000 1468 med
 #eva $1 "macsec-chachapoly-we" 1000 1468 cwe
 #eva $1 "macsec-chachapoly-e" 1000 1468 mce
 #eva $1 "macsec-aegis128l-e" 1000 1468 ae
