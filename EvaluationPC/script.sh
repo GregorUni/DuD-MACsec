@@ -303,15 +303,13 @@ config_macsec_without_encryption()
 	sudo ifconfig macsec0 10.10.12.1/24
 	sudo ip link set dev macsec0 mtu 1514
 	sudo ip link set macsec0 type macsec encrypt off
-	
-	
-
-
 }
 
 config_macsec_encryption_default()
 {
+
 	sudo modprobe -r macsec
+	cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
 	sudo modprobe -v macsec
 	sudo ip link add link eno1 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
@@ -414,20 +412,6 @@ config_macsec_morus640_without_encryption()
 }
 config_macsec_orig_with_encryption()
 {
-	#sudo modprobe -r macsec	
-	#cd . ../macsec/orig/
-	#sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-	#sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
-	#sudo modprobe -v macsec
-	#sudo ip link add link eno1 macsec0 type macsec
-	#sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	#sudo ip link set dev macsec0 up
-	#sudo ifconfig macsec0 10.10.12.1/24
-	#sudo ip link set dev macsec0 mtu 1514
-	#sudo ip link set macsec0 type macsec encrypt on
-	#alias proj="cd ../macsec/orig/"
 	cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh
 	cd /home/test1/DuD-MACsec/EvaluationPC/
 	#alias proj="cd ../../EvaluationPC/"
@@ -435,20 +419,6 @@ config_macsec_orig_with_encryption()
 
 config_macsec_orig_without_encryption()
 {
-	#cd . ../macsec/orig/
-	#sudo modprobe -r macsec	
-	#sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-	#sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
-	#sudo modprobe -v macsec
-	#sudo ip link add link eno1 macsec0 type macsec
-	#sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1
-	#sudo ip macsec add macsec0 rx address ec:b1:d7:4b:bc:fd port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	#sudo ip link set dev macsec0 up
-	#sudo ifconfig macsec0 10.10.12.1/24
-	#sudo ip link set dev macsec0 mtu 1514
-	#sudo ip link set macsec0 type macsec encrypt off
-	#cd . ../../EvaluationPC/
 	cd /home/test1/DuD-MACsec/macsec/orig/; sh config_macsec_orig_without_encryption.sh
 	cd /home/test1/DuD-MACsec/EvaluationPC/
 

@@ -1,4 +1,5 @@
 sudo modprobe -r macsec
+cd /home/test2/DuD-MACsec/macsec ; sh conf-macsec.sh
 sudo modprobe -v macsec
 sudo ip link add link eno1 macsec0 type macsec
 sudo ip macsec add macsec0 tx sa 0 pn 1 on key 02 09876543210987654321098765432109
