@@ -428,7 +428,8 @@ config_macsec_orig_with_encryption()
 	#sudo ip link set dev macsec0 mtu 1514
 	#sudo ip link set macsec0 type macsec encrypt on
 	#alias proj="cd ../macsec/orig/"
-	sh /home/test1/DuD-MACsec/macsec/orig/config_macsec_orig_with_encryption.sh
+	cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh
+	cd home/test1/DuD-MACsec/EvaluationPC/
 	#alias proj="cd ../../EvaluationPC/"
 }
 
@@ -448,9 +449,9 @@ config_macsec_orig_without_encryption()
 	#sudo ip link set dev macsec0 mtu 1514
 	#sudo ip link set macsec0 type macsec encrypt off
 	#cd . ../../EvaluationPC/
-	alias proj="cd /home/test1/DuD-MACsec/macsec/orig/"
-	sh /home/test1/DuD-MACsec/macsec/orig/config_macsec_orig_without_encryption.sh
-	alias proj="cd /home/test1/DuD-MACsec/EvaluationPC/"
+	cd /home/test1/DuD-MACsec/macsec/orig/; sh config_macsec_orig_without_encryption.sh
+	cd home/test1/DuD-MACsec/EvaluationPC/
+
 }
 
 # first parameter is the value for the amount of tests
