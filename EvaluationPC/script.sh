@@ -450,24 +450,24 @@ config_macsec_orig_without_encryption()
 # fourth parameter eno 1
 init
 make_info
-#eva $1 "no-macsec" 1000 1464
-#eva $1 "no-macsec" 1000 1500
-#eva $1 "no-macsec" 1000 2936
-#eva $1 "orig" 1464 1500 m #
-#eva $1 "orig" 1464 1500 mw #
-#eva $1 "orig-jumbo" 1500 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-#eva $1 "orig-jumbo" 2936 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
+eva $1 "no-macsec" 1000 1464
+eva $1 "no-macsec" 1000 1500
+eva $1 "no-macsec" 1000 2936
+eva $1 "orig" 1464 1500 m #
+eva $1 "orig" 1464 1500 mw #
+eva $1 "orig-jumbo" 1500 9000 m #
+eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+eva $1 "orig-jumbo" 2936 9000 m #
+eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e-1500" 1500 1500 med 
-eva $1 "macsec-aesgcm-we-1500" 1500 1500 mwe
-eva $1 "macsec-chachapoly-we-1500" 1500 1500 cwe
-eva $1 "macsec-chachapoly-e-1500" 1500 1500 mce
-eva $1 "macsec-aegis128l-e-1500" 1500 1500 ae
-eva $1 "macsec-aegis128l-we-1500" 1500 1500 awe
-eva $1 "macsec-morus640-e-1500" 1500 1500 mme
-eva $1 "macsec-morus640-we-1500" 1500 1500 mmwe
+#eva $1 "macsec-aesgcm-e-1500" 1500 1500 med 
+#eva $1 "macsec-aesgcm-we-1500" 1500 1500 mwe
+#eva $1 "macsec-chachapoly-we-1500" 1500 1500 cwe
+#eva $1 "macsec-chachapoly-e-1500" 1500 1500 mce
+#eva $1 "macsec-aegis128l-e-1500" 1500 1500 ae
+#eva $1 "macsec-aegis128l-we-1500" 1500 1500 awe
+#eva $1 "macsec-morus640-e-1500" 1500 1500 mme
+#eva $1 "macsec-morus640-we-1500" 1500 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
