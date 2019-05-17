@@ -3,6 +3,7 @@
 EVA_DIR=test
 FPREFIX=$(date +%s)
 DEST_IP=10.10.12.2
+SOURC_IP=10.10.12.1
 REMOTE_IP=141.76.55.43
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -79,124 +80,100 @@ eva() {
 
 	if [[ $5 == mwe ]]; then #case macsec with aes(gcm) without encryption 
 		IP=$DEST_IP
+		#configure macsec device on remote computer and host computer
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_without_encryption.sh"
                 config_macsec_without_encryption
-                make_info $2 $4
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m # 1500 1500 ; 1464 1500 ; 2936 1500
+                
+		#set mtu for ethernet device and macsec0
+		make_info $2 $4
+		mtu_config_for_iperf3 $3 $4
+
+		#start ping and iperf tests
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
+		
+
 
 	
 
 	elif [[ $5 == med ]]; then #case macsec with aes(gcm) and encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_encryption_default.sh"
 		config_macsec_encryption_default
+		
 		make_info $2 $4
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
+		
 
 
 	elif [[ $5 == cwe ]]; then #case macsec with chachapoly without encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_without_encryption.sh"
 		config_macsec_chacha_without_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_encryption.sh"
 		config_macsec_chacha_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_without_encryption.sh"
 		config_macsec_aegis128l_without_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_encryption.sh"
 		config_macsec_aegis128l_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_encryption.sh"
 		config_macsec_morus640_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP	
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -204,38 +181,25 @@ eva() {
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh"
 		config_macsec_morus640_without_encryption
+		
 		make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
-		mtu_config_for_iperf3 $1 $2 1464 $DEST_IP m
-		mtu_config_for_iperf3 $1 $2 2936 $DEST_IP m
+		eva_iperf $1 $2 $3 $DEST_IP
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 		IP=$DEST_IP
+		
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption_remote.sh"
 		config_macsec_orig_with_encryption
+		
 		make_info $2 $4
-		#sudo ip link set dev eno1 mtu 60
-                #eva_iperf $1 $2 60 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
@@ -243,35 +207,23 @@ eva() {
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_without_encryption_remote.sh" 
 		echo -e "mtu_config is "
 		config_macsec_orig_without_encryption
+		
 		make_info $2 $4
-		#sudo ip link set dev eno1 mtu 60
-                #eva_iperf $1 $2 60 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 164 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 292 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 548 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1060 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1436 $DEST_IP
-		mtu_config_for_iperf3 $1 $2 1550 $DEST_IP
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $3 $DEST_IP m
+		mtu_config_for_iperf3 $3 $4
+		
 		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 
 
 	else    #case no macsec no encryption
 		echo -e "ethernet"
+		
 		IP=169.254.234.92
                 make_info $2 $4
-		mtu_config_for_iperf3 $1 $2 164 169.254.234.92
-		mtu_config_for_iperf3 $1 $2 292 169.254.234.92
-		mtu_config_for_iperf3 $1 $2 548 169.254.234.92
-		mtu_config_for_iperf3 $1 $2 1060 169.254.234.92
-		mtu_config_for_iperf3 $1 $2 1436 169.254.234.92
-		mtu_config_for_iperf3 $1 $2 1550 169.254.234.92
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $4"
-		sudo ip link set dev eno1 mtu $4
-		mtu_config_for_iperf3 $1 $2 $4 169.254.234.92 m
+		
+		mtu_config_for_iperf3 $3 $4
 		eva_ping $2 $4 169.254.234.92
+		eva_iperf $1 $2 $3 169.254.234.92
 
 	fi
 }
@@ -280,19 +232,15 @@ mtu_config_for_iperf3()
 {
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
-	if [[ $5 == m ]]; then
-		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $3"
-		sudo ip link set dev macsec0 mtu $3
 
-
-	else
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $3"
-		sudo ip link set dev eno1 mtu $3
-		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $((( $3  - 36 )))"
-		sudo ip link set dev macsec0 mtu $((( $3  - 36)))
-	fi 
+		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $2"
+		sudo ip link set dev eno1 mtu $2
+		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
+		sudo ip link set dev macsec0 mtu $1
+	
 sleep 4
-eva_iperf $1 $2 $3 $4
+echo -e "end mtu_config for iperf3"
+
 
 
 }
@@ -435,28 +383,32 @@ config_macsec_orig_without_encryption()
 
 # first parameter is the value for the amount of tests
 # second parameter give a short explanation
-# third parameter gives the macsec0 mtu-> third parameter isnt used...
-# fourth parameter eno 1
+# third parameter gives the macsec0 mtu
+# fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec" 1000 1464
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2936
-eva $1 "orig" 1464 1500 m #
-eva $1 "orig" 1464 1500 mw #
-eva $1 "orig-jumbo" 1500 9000 m #
-eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-eva $1 "orig-jumbo" 2936 9000 m #
-eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
+#eva $1 "no-macsec" 1000 1464
+#eva $1 "no-macsec" 1000 1500
+#eva $1 "no-macsec" 1000 2936
+#eva $1 "orig" 1464 1500 m #
+#eva $1 "orig" 1464 1500 mw #
+#eva $1 "orig-jumbo" 1500 9000 m #
+#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+#eva $1 "orig-jumbo" 2936 9000 m #
+#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
 #testcases with frag 
-#eva $1 "macsec-aesgcm-e-1500" 1500 1500 med 
-#eva $1 "macsec-aesgcm-we-1500" 1500 1500 mwe
-#eva $1 "macsec-chachapoly-we-1500" 1500 1500 cwe
-#eva $1 "macsec-chachapoly-e-1500" 1500 1500 mce
-#eva $1 "macsec-aegis128l-e-1500" 1500 1500 ae
-#eva $1 "macsec-aegis128l-we-1500" 1500 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1500 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1500 1500 mmwe
+eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aesgcm-e-frag-jumbo" 1500 2932 med 
+eva $1 "macsec-aesgcm-we-frag-jumbo" 1500 2932 mwe
+eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
