@@ -83,7 +83,7 @@ eva() {
 		#configure macsec device on remote computer and host computer
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_without_encryption.sh"
-                config_macsec_without_encryption
+                sh host_config_macsec_without_encryption.sh $MAC_ADR
                 
 		#set mtu for ethernet device and macsec0
 		make_info $2 $4
@@ -99,10 +99,14 @@ eva() {
 
 	elif [[ $5 == med ]]; then #case macsec with aes(gcm) and encryption
 		IP=$DEST_IP
+		#loading macsec with fragmentation and crypto extension
+		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec ; sh conf-macsec.sh;"
+		cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
+		cd /home/test1/DuD-MACsec/EvaluationPC/
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_encryption_default.sh"
-		config_macsec_encryption_default
-		
+		sh host_config_macsec_encryption_default.sh $MAC_ADR
+
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
 		
@@ -247,26 +251,11 @@ echo -e "end mtu_config for iperf3"
 
 
 
-config_macsec_without_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-	sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt off
-}
 
 config_macsec_encryption_default()
 {
 
 	sudo modprobe -r macsec
-	cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
-	cd /home/test1/DuD-MACsec/EvaluationPC/
 	sudo modprobe -v macsec
 	sudo ip link add link eno1 macsec0 type macsec
 	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
@@ -399,16 +388,16 @@ make_info
 #testcases with frag 
 eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
 eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-eva $1 "macsec-aesgcm-e-frag-jumbo" 1500 2932 med 
-eva $1 "macsec-aesgcm-we-frag-jumbo" 1500 2932 mwe
-eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
-eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+#eva $1 "macsec-aesgcm-e-frag-jumbo" 1500 2932 med 
+#eva $1 "macsec-aesgcm-we-frag-jumbo" 1500 2932 mwe
+#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+#eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
