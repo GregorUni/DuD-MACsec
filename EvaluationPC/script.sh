@@ -42,22 +42,23 @@ eva_ping() {
 
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
-
+	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	killall dstat
 }
 
 
 eva_iperf() {
     echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
     BANDWIDTH_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-$3iperf.json
-
+    Dstat_FILE=$EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.txt
     echo -n "[" > $BANDWIDTH_FILE # Clear file
-
+	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
     for i in `seq 1 $1`; do
         echo -e "Start iperf3 #$i"
         sudo timeout 20 iperf3 -Jc $4 >> $BANDWIDTH_FILE
@@ -72,6 +73,7 @@ eva_iperf() {
             echo -ne "," >> $BANDWIDTH_FILE
         fi;
     done
+	killall dstat
 }
 	
 
@@ -200,7 +202,7 @@ eva() {
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption_remote.sh $HOST_MAC_ADR"
 		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
 		cd /home/test1/DuD-MACsec/EvaluationPC/
-		#sh host_config_macsec_orig_with_encryption.sh $MAC_ADR
+		
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -210,7 +212,7 @@ eva() {
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
-
+		#loading original macsec module into kernel
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_without_encryption_remote.sh $HOST_MAC_ADR" 
 		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
 		cd /home/test1/DuD-MACsec/EvaluationPC/
@@ -252,7 +254,7 @@ echo -e "end mtu_config for iperf3"
 
 }
 
-
+#todo interface mit variablen versehen. path problem lösen. nur noch eine macsec script datei erstellen mit vielen verschiedenen variablen.
 # first parameter is the value for the amount of tests
 # second parameter give a short explanation
 # third parameter gives the macsec0 mtu
@@ -269,10 +271,10 @@ make_info
 #eva $1 "orig-jumbo" 2928 9000 m #
 #eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
 #testcases with frag 
-#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
 eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
 #eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 #eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 #eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
