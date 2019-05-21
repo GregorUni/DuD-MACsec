@@ -119,7 +119,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_without_encryption.sh"
-		config_macsec_chacha_without_encryption
+		sh host_config_macsec_chacha_without_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -132,7 +132,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_encryption.sh"
-		config_macsec_chacha_encryption
+		sh host_config_macsec_chacha_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -145,7 +145,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_without_encryption.sh"
-		config_macsec_aegis128l_without_encryption
+		sh host_config_macsec_aegis128l_without_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -158,7 +158,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_encryption.sh"
-		config_macsec_aegis128l_encryption
+		sh host_config_macsec_aegis128l_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -171,7 +171,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_encryption.sh"
-		config_macsec_morus640_encryption
+		sh host_config_macsec_morus640_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -184,7 +184,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh"
-		config_macsec_morus640_without_encryption
+		sh host_config_macsec_morus640_without_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -197,7 +197,9 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption_remote.sh"
-		config_macsec_orig_with_encryption
+		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
+		cd /home/test1/DuD-MACsec/EvaluationPC/
+		#sh host_config_macsec_orig_with_encryption.sh $MAC_ADR
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -207,10 +209,10 @@ eva() {
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
-		echo -e "mtu_config"
+
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_without_encryption_remote.sh" 
-		echo -e "mtu_config is "
-		config_macsec_orig_without_encryption
+		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
+		cd /home/test1/DuD-MACsec/EvaluationPC/
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -250,126 +252,6 @@ echo -e "end mtu_config for iperf3"
 }
 
 
-
-
-config_macsec_encryption_default()
-{
-
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo ip link add link eno1 macsec0 type macsec
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-	sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt on
-}
-
-config_macsec_chacha_without_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v chacha20poly1305
-	sudo ip link add link eno1 macsec0 type macsec cipher chacha-poly-256
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt off
-}
-
-config_macsec_chacha_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v chacha20poly1305
-	sudo ip link add link eno1 macsec0 type macsec cipher chacha-poly-256
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt on
-}
-
-config_macsec_aegis128l_without_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v aegis128l
-	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt off
-}
-
-config_macsec_aegis128l_encryption()
-{
-sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v aegis128l
-	sudo ip link add link eno1 macsec0 type macsec cipher aegis128l-128
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt on
-
-}
-
-config_macsec_morus640_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v morus640
-	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt on
-}
-config_macsec_morus640_without_encryption()
-{
-	sudo modprobe -r macsec
-	sudo modprobe -v macsec
-	sudo modprobe -v morus640
-	sudo ip link add link eno1 macsec0 type macsec cipher morus640-128
-	sudo ip macsec add macsec0 tx sa 0 pn 1 on key 01 12345678901234567890123456789012
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1
-	sudo ip macsec add macsec0 rx address $MAC_ADR port 1 sa 0 pn 1 on key 02 09876543210987654321098765432109
-	sudo ip link set dev macsec0 up
-	sudo ifconfig macsec0 10.10.12.1/24
-	sudo ip link set dev macsec0 mtu 1514
-	sudo ip link set macsec0 type macsec encrypt off
-}
-config_macsec_orig_with_encryption()
-{
-	cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
-	cd /home/test1/DuD-MACsec/EvaluationPC/
-	#alias proj="cd ../../EvaluationPC/"
-}
-
-config_macsec_orig_without_encryption()
-{
-	cd /home/test1/DuD-MACsec/macsec/orig/; sh config_macsec_orig_without_encryption.sh $MAC_ADR
-	cd /home/test1/DuD-MACsec/EvaluationPC/
-
-}
-
 # first parameter is the value for the amount of tests
 # second parameter give a short explanation
 # third parameter gives the macsec0 mtu
@@ -378,20 +260,22 @@ init
 make_info
 #eva $1 "no-macsec" 1000 1464
 #eva $1 "no-macsec" 1000 1500
-#eva $1 "no-macsec" 1000 2936
+#eva $1 "no-macsec" 1000 2928
 #eva $1 "orig" 1464 1500 m #
 #eva $1 "orig" 1464 1500 mw #
 #eva $1 "orig-jumbo" 1500 9000 m #
 #eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-#eva $1 "orig-jumbo" 2936 9000 m #
+#eva $1 "orig-jumbo" 2928 9000 m #
 #eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+#eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
 #eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
 #eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-#eva $1 "macsec-aesgcm-e-frag-jumbo" 1500 2932 med 
-#eva $1 "macsec-aesgcm-we-frag-jumbo" 1500 2932 mwe
+#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
 #eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 #eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
 #eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
