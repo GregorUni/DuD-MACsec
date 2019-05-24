@@ -1,0 +1,8 @@
+qdisc noqueue 0: dev lo root refcnt 2 
+qdisc fq_codel 0: dev eno1 root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+qdisc fq_codel 0: dev enx18d6c70c0a7e root refcnt 2 limit 10240p flows 1024 quantum 1514 target 5.0ms interval 100.0ms memory_limit 32Mb ecn 
+qdisc noqueue 0: dev macsec0 root refcnt 2 
+15: macsec0@eno1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1514 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether ec:b1:d7:4b:bd:01 brd ff:ff:ff:ff:ff:ff
+2: eno1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP mode DEFAULT group default qlen 1000
+    link/ether ec:b1:d7:4b:bd:01 brd ff:ff:ff:ff:ff:ff

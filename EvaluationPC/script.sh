@@ -2,14 +2,29 @@
 
 EVA_DIR=test
 FPREFIX=$(date +%s)
-DEST_IP=10.10.12.2
-SOURC_IP=10.10.12.1
-REMOTE_IP=141.76.55.43
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-MAC_ADR="ec:b1:d7:4b:bc:fd"
-HOST_MAC_ADR="ec:b1:d7:4b:bd:01"
 NC='\033[0m' # No Color
+
+Host_PTH='/home/Foo/Documents/Programs/ShellScripts/Butler'
+HOST_MAC_ADR="ec:b1:d7:4b:bd:01"
+SOURC_IP=10.10.12.1
+HOST_ETHERNET_NAME="eno1"
+
+Remote_PTH='/home/Foo/Documents/Programs/ShellScripts/Butler'
+Remote_MAC_ADR="ec:b1:d7:4b:bc:fd"
+DEST_IP=10.10.12.2
+REMOTE_IP=141.76.55.43
+REMOTE_ETHERNET_NAME="eno1"
+#Cipher configs for iproute2
+
+AEGIS="aegis128l-128"
+CHACHA="chachapoly-256"
+MORUS="morus640-128"
+AES="aes(gcm)"
+#with encryption
+ON="on"
+OFF="off"
 
 init() {
     if [ ! -d "$EVA_DIR" ]; then
@@ -85,8 +100,8 @@ eva() {
 		IP=$DEST_IP
 		#configure macsec device on remote computer and host computer
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_without_encryption.sh $HOST_MAC_ADR"
-                sh host_config_macsec_without_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $OFF"
+                sh host_config.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $OFF
                 
 		#set mtu for ethernet device and macsec0
 		make_info $2 $4
@@ -107,8 +122,8 @@ eva() {
 		cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
 		cd /home/test1/DuD-MACsec/EvaluationPC/
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_encryption_default.sh $HOST_MAC_ADR"
-		sh host_config_macsec_encryption_default.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $ON"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $ON
 
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -121,8 +136,8 @@ eva() {
 	elif [[ $5 == cwe ]]; then #case macsec with chachapoly without encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_without_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_chacha_without_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $CHACHA $HOST_MAC_ADR $OFF"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $OFF
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -134,8 +149,8 @@ eva() {
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_chacha_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_chacha_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $CHACHA $HOST_MAC_ADR $ON"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $ON
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -147,8 +162,8 @@ eva() {
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_without_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_aegis128l_without_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $AEGIS $HOST_MAC_ADR $OFF"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $AEGIS $Remote_MAC_ADR $OFF
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -160,8 +175,8 @@ eva() {
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_aegis128l_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_aegis128l_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $AEGIS $HOST_MAC_ADR $ON"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $AEGIS $Remote_MAC_ADR $ON
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -173,8 +188,8 @@ eva() {
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_morus640_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $MORUS $HOST_MAC_ADR $ON"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $MORUS $Remote_MAC_ADR $ON
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -186,8 +201,8 @@ eva() {
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
 		IP=$DEST_IP
 		
-		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec_morus640_without_encryption.sh $HOST_MAC_ADR"
-		sh host_config_macsec_morus640_without_encryption.sh $MAC_ADR
+		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $MORUS $HOST_MAC_ADR $OFF"
+		sh config_macsec.sh $HOST_ETHERNET_NAME $MORUS $Remote_MAC_ADR $OFF
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -200,7 +215,7 @@ eva() {
 		IP=$DEST_IP
 		
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption_remote.sh $HOST_MAC_ADR"
-		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
+		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $Remote_MAC_ADR
 		cd /home/test1/DuD-MACsec/EvaluationPC/
 		
 		
@@ -214,7 +229,7 @@ eva() {
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
 		ssh root@$REMOTE_IP "cd /home/test2/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_without_encryption_remote.sh $HOST_MAC_ADR" 
-		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $MAC_ADR
+		cd /home/test1/DuD-MACsec/macsec/orig/ ; sh config_macsec_orig_with_encryption.sh $Remote_MAC_ADR
 		cd /home/test1/DuD-MACsec/EvaluationPC/
 		
 		make_info $2 $4
@@ -275,16 +290,16 @@ eva $1 "macsec-aesgcm-e-1464" 1464 1500 med
 eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
 eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
-#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
-#eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
