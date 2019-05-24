@@ -7,13 +7,13 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 #variables for host_pc
-Host_PTH='/home/test1' #folder in which the git repository is stored
+Host_PTH="/home/test1" #folder in which the git repository is located
 HOST_MAC_ADR="ec:b1:d7:4b:bd:01" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eno1"
 
 #variables for remote_pc
-Remote_PTH='/home/test2' #folder in which the git repository is stored
+Remote_PTH="/home/test2" #folder in which the git repository is located
 Remote_MAC_ADR="ec:b1:d7:4b:bc:fd" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
@@ -217,9 +217,9 @@ eva() {
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 
 		
-		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
-		cd $Host_PTH/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
-		cd $Host_PTH/DuD-MACsec/EvaluationPC/
+		ssh root@$REMOTE_IP "cd "$Remote_PTH"/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
+		cd "$Host_PTH"/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
+		cd "$Host_PTH"/DuD-MACsec/EvaluationPC/
 		
 		
 		make_info $2 $4
@@ -231,9 +231,9 @@ eva() {
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
-		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF" 
-		cd $HOST_PTH/DuD-MACsec/macsec/orig/ ; sh  orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
-		cd $Host_PTH/DuD-MACsec/EvaluationPC/
+		ssh root@$REMOTE_IP "cd "$Remote_PTH"/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF" 
+		cd "$HOST_PTH"/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
+		cd "$Host_PTH"/DuD-MACsec/EvaluationPC/
 		
 		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
@@ -243,9 +243,7 @@ eva() {
 
 
 	else    #case no macsec no encryption
-		echo -e "ethernet"
-		
-		IP=169.254.234.92
+
                 make_info $2 $4
 		
 		mtu_config_for_iperf3 $3 $4
