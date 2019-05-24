@@ -1,0 +1,14 @@
+"Dstat 0.7.3 CSV output"
+"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
+"Host:","test1-HP-ProDesk-600-G1-TWR",,,,"User:","test1"
+"Cmdline:","dstat -N eth0,macsec0--noheaders --output test/iperf3-1558701388-1-macsec-aesgcm-e-1464-dstat.csv",,,,"Date:","24 May 2019 14:37:22 CEST"
+"total cpu usage",,,,,"dsk/total",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","in","out","int","csw"
+3.438,0.817,95.649,0.096,0,366559.929,380490.862,0,0,3045.554,4140.382
+1.003,0.251,98.747,0,0,0,0,0,0,306,929
+1.010,0,98.990,0,0,0,77824,0,0,359,1459
+0.506,0.253,99.241,0,0,0,0,0,0,316,1238
+2.513,0.754,96.734,0,0,0,0,0,0,740,2232
+2.764,0.503,96.734,0,0,0,0,0,0,793,2545
+2.020,0.505,97.475,0,0,0,0,0,0,743,2547
+3.500,0.500,95.750,0.250,0,0,253952,0,0,827,2865
