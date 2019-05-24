@@ -21,7 +21,7 @@ REMOTE_ETHERNET_NAME="eno1"
 AEGIS="aegis128l-128"
 CHACHA="chachapoly-256"
 MORUS="morus640-128"
-AES="aes(gcm)"
+AES="default"
 #with encryption
 ON="on"
 OFF="off"
@@ -58,12 +58,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	killall dstat
 }
 
@@ -101,7 +101,7 @@ eva() {
 		#configure macsec device on remote computer and host computer
 		
 		ssh root@$REMOTE_IP "sh /home/test2/DuD-MACsec/EvaluationPC/config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $OFF"
-                sh host_config.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $OFF
+                sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $OFF
                 
 		#set mtu for ethernet device and macsec0
 		make_info $2 $4
