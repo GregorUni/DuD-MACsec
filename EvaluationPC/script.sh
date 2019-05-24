@@ -48,8 +48,9 @@ make_info() {
 
   tc qdisc > $INFO_FILE
 	ip link show macsec0 >> $INFO_FILE
-	ip link show eno1>> $INFO_FILE
+	ip link show eno1 >> $INFO_FILE
 	#ip macsec show >> $INFO_FILE
+	ifconfig >> $INFO_FILE
 }
 
 eva_ping() {
@@ -61,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	killall dstat
 }
 
@@ -128,8 +129,8 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
 
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
@@ -142,8 +143,8 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $CHACHA $HOST_MAC_ADR $DEST_IP $OFF"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $CHACHA $Remote_MAC_ADR $SOURC_IP $OFF
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
@@ -155,8 +156,8 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $CHACHA $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $CHACHA $Remote_MAC_ADR $SOURC_IP $ON
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
@@ -168,9 +169,9 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AEGIS $HOST_MAC_ADR $DEST_IP $OFF"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AEGIS $Remote_MAC_ADR $SOURC_IP $OFF
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
-		
+		make_info $2 $4
+
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
 
@@ -181,9 +182,9 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AEGIS $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AEGIS $Remote_MAC_ADR $SOURC_IP $ON
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
-		
+		make_info $2 $4
+
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
 
@@ -194,9 +195,9 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $MORUS $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $MORUS $Remote_MAC_ADR $SOURC_IP $ON
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
-		
+		make_info $2 $4
+
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP	
 
@@ -207,8 +208,8 @@ eva() {
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPC/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $MORUS $HOST_MAC_ADR $DEST_IP $OFF"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $MORUS $Remote_MAC_ADR $SOURC_IP $OFF
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
@@ -217,13 +218,12 @@ eva() {
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 
 		
-		ssh root@$REMOTE_IP "cd "$Remote_PTH"/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
-		cd "$Host_PTH"/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
-		cd "$Host_PTH"/DuD-MACsec/EvaluationPC/
+		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
+		cd $Host_PTH/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
+		cd $Host_PTH/DuD-MACsec/EvaluationPC/
 		
-		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
@@ -231,22 +231,22 @@ eva() {
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
-		ssh root@$REMOTE_IP "cd "$Remote_PTH"/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF" 
-		cd "$HOST_PTH"/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
-		cd "$Host_PTH"/DuD-MACsec/EvaluationPC/
+		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF" 
+		cd $Host_PTH/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
+		cd $Host_PTH/DuD-MACsec/EvaluationPC/
 		
-		make_info $2 $4
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
 
 
 	else    #case no macsec no encryption
-
-                make_info $2 $4
 		
 		mtu_config_for_iperf3 $3 $4
+		make_info $2 $4
+
 		eva_ping $2 $4 $ETHERNET_IP
 		eva_iperf $1 $2 $3 $ETHERNET_IP
 
@@ -277,30 +277,30 @@ echo -e "end mtu_config for iperf3"
 # fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec" 1000 1464
+#eva $1 "no-macsec" 1000 1464
 #eva $1 "no-macsec" 1000 1500
 #eva $1 "no-macsec" 1000 2928
-eva $1 "orig" 1464 1500 m #
-eva $1 "orig" 1464 1500 mw #
+#eva $1 "orig" 1464 1500 m #
+#eva $1 "orig" 1464 1500 mw #
 #eva $1 "orig-jumbo" 1500 9000 m #
 #eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
 #eva $1 "orig-jumbo" 2928 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 2936 9000 mw #
+#eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
-eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+#eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
