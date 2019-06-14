@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=tests
+EVA_DIR=test
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -67,8 +67,8 @@ eva_ping() {
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1492 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
-	killall dstat
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
 
@@ -92,7 +92,7 @@ eva_iperf() {
             echo -ne "," >> $BANDWIDTH_FILE
         fi;
     done
-	killall dstat
+	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 	
 
