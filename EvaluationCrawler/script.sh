@@ -48,7 +48,7 @@ make_info() {
 
   tc qdisc > $INFO_FILE
 	ip link show macsec0 >> $INFO_FILE
-	ip link show eno1 >> $INFO_FILE
+	ip link show eth0 >> $INFO_FILE
 	#ip macsec show >> $INFO_FILE
 	ifconfig >> $INFO_FILE
 }
@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -258,8 +258,8 @@ mtu_config_for_iperf3()
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
 
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $2"
-		sudo ip link set dev eno1 mtu $2
+		ssh root@$REMOTE_IP "sudo ip link set dev eth0 mtu $2"
+		sudo ip link set dev eth0 mtu $2
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
 		sudo ip link set dev macsec0 mtu $1
 	
