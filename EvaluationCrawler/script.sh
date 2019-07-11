@@ -123,10 +123,10 @@ eva() {
 		IP=$DEST_IP
 		#loading macsec with fragmentation and crypto extension
 		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec ; sh conf-macsec.sh;"
-		cd /home/test1/DuD-MACsec/macsec ; sh conf-macsec.sh
-		cd /home/test1/DuD-MACsec/EvaluationCrawler/
+		cd ../macsec/ ;  sh conf-macsec.sh
+		cd ../EvaluationCrawler/
 		
-		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationCrawler/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
+		ssh root@$REMOTE_IP "sh DuD-MACsec/EvaluationCrawler/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
 
 		mtu_config_for_iperf3 $3 $4
