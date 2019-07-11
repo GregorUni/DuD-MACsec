@@ -7,13 +7,13 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 #variables for host_pc
-Host_PTH="" #folder in which the git repository is located
+Host_PTH="~" #folder in which the git repository is located
 HOST_MAC_ADR="3c:d9:2b:02:92:0d" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eth0"
 
 #variables for remote_pc
-Remote_PTH="" #folder in which the git repository is located
+Remote_PTH="~" #folder in which the git repository is located
 Remote_MAC_ADR="3c:d9:2b:02:94:66" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
