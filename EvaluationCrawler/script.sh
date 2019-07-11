@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 5 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -218,9 +218,9 @@ eva() {
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
 
 		
-		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
-		cd $Host_PTH/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
-		cd $Host_PTH/DuD-MACsec/EvaluationCrawler/
+		ssh root@$REMOTE_IP "cd ~/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
+		cd ~/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
+		cd ~/DuD-MACsec/EvaluationCrawler/
 		
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
@@ -277,9 +277,9 @@ echo -e "end mtu_config for iperf3"
 # fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec" 1000 1464
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2928
+#eva $1 "no-macsec" 1000 1464
+#eva $1 "no-macsec" 1000 1500
+#eva $1 "no-macsec" 1000 2928
 eva $1 "orig" 1464 1500 m #
 eva $1 "orig" 1464 1500 mw #
 eva $1 "orig-jumbo" 1500 9000 m #
