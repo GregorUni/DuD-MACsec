@@ -13,7 +13,7 @@ SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eth0"
 
 #variables for remote_pc
-Remote_PTH="~" #folder in which the git repository is located
+Remote_PTH="/home/pi" #folder in which the git repository is located
 Remote_MAC_ADR="b8:27:eb:ed:6c:a3" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
