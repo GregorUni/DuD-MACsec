@@ -13,7 +13,7 @@ SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eth0"
 
 #variables for remote_pc
-Remote_PTH="/home/pi" #folder in which the git repository is located
+Remote_PTH=/home/pi #folder in which the git repository is located
 Remote_MAC_ADR="b8:27:eb:ed:6c:a3" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
@@ -126,7 +126,7 @@ eva() {
 		cd ../macsec/ ;  sh conf-macsec.sh
 		cd ../EvaluationPi/
 		
-		ssh root@$REMOTE_IP "sh DuD-MACsec/EvaluationPi/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
+		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPi/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
 
 		mtu_config_for_iperf3 $3 $4
