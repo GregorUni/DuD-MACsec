@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 5 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -280,27 +280,27 @@ make_info
 eva $1 "no-macsec-1464" 1000 1464
 eva $1 "no-macsec-1500" 1000 1500
 eva $1 "no-macsec-2928" 1000 2928
-#eva $1 "orig" 1464 1500 m #
-#eva $1 "orig" 1464 1500 mw #
-#eva $1 "orig-jumbo" 1500 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-#eva $1 "orig-jumbo" 2928 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
+eva $1 "orig" 1464 1500 m #
+eva $1 "orig" 1464 1500 mw #
+eva $1 "orig-jumbo" 1500 9000 m #
+eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+eva $1 "orig-jumbo" 2928 9000 m #
+eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
-#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-#eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
-#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
-#eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
