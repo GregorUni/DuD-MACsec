@@ -1,0 +1,47 @@
+qdisc noqueue 0: dev lo root refcnt 2 
+qdisc pfifo_fast 0: dev eth0 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 0: dev eth1 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 0: dev wlan0 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 0: dev eth2 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+53: eth2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1464 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether ec:08:6b:1c:25:04 brd ff:ff:ff:ff:ff:ff
+eth0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        ether b8:27:eb:12:24:7e  txqueuelen 1000  (Ethernet)
+        RX packets 1148627  bytes 92951253 (88.6 MiB)
+        RX errors 0  dropped 95  overruns 0  frame 0
+        TX packets 2352971  bytes 3565377435 (3.3 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 9000
+        inet 141.76.55.44  netmask 255.255.255.192  broadcast 141.76.55.63
+        inet6 fe80::e07f:9fba:59a0:8800  prefixlen 64  scopeid 0x20<link>
+        ether 18:d6:c7:0c:0a:7e  txqueuelen 1000  (Ethernet)
+        RX packets 11654  bytes 2435988 (2.3 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 8747  bytes 1335653 (1.2 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1464
+        inet 169.254.244.105  netmask 255.255.0.0  broadcast 169.254.255.255
+        ether ec:08:6b:1c:25:04  txqueuelen 1000  (Ethernet)
+        RX packets 116672  bytes 7787801 (7.4 MiB)
+        RX errors 0  dropped 122  overruns 0  frame 0
+        TX packets 585088  bytes 1011965938 (965.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Lokale Schleife)
+        RX packets 275  bytes 116890 (114.1 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 275  bytes 116890 (114.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        ether b8:27:eb:47:71:2b  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
