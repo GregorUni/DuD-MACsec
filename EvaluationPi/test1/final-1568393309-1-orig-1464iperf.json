@@ -1,0 +1,12 @@
+[{
+	"start":	{
+		"connected":	[],
+		"version":	"iperf 3.7",
+		"system_info":	"Linux raspberrypi 4.19.68-v7+ #1 SMP Thu Aug 29 16:08:00 CEST 2019 armv7l"
+	},
+	"intervals":	[],
+	"end":	{
+	},
+	"error":	"error - unable to connect to server: No route to host"
+}
+]

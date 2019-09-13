@@ -231,7 +231,7 @@ eva() {
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
-		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF" 
+		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF"
 		cd ../macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
 		cd ../../EvaluationPi/
 		
@@ -277,9 +277,9 @@ echo -e "end mtu_config for iperf3"
 # fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec-1464" 1000 1464
-eva $1 "no-macsec-1500" 1000 1500
-eva $1 "no-macsec-2928" 1000 2928
+#eva $1 "no-macsec-1464" 1000 1464
+#eva $1 "no-macsec-1500" 1000 1500
+#eva $1 "no-macsec-2928" 1000 2928
 eva $1 "orig" 1464 1500 m #
 eva $1 "orig" 1464 1500 mw #
 eva $1 "orig-jumbo" 1500 9000 m #
