@@ -8,17 +8,17 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="~" #folder in which the git repository is located
-HOST_MAC_ADR="b8:27:eb:12:24:7e" #mac adress
+HOST_MAC_ADR="ec:08:6b:1c:25:04" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
-HOST_ETHERNET_NAME="eth0"
+HOST_ETHERNET_NAME="eth2"
 
 #variables for remote_pc
 Remote_PTH=/home/pi #folder in which the git repository is located
-Remote_MAC_ADR="b8:27:eb:ed:6c:a3" #mac adress
+Remote_MAC_ADR="18:d6:c7:0c:16:82" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
-ETHERNET_IP=169.254.19.204 #ethernet ip
-REMOTE_ETHERNET_NAME="eth0" #name of ethernet interface
+ETHERNET_IP=169.254.61.115 #ethernet ip
+REMOTE_ETHERNET_NAME="eth2" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
