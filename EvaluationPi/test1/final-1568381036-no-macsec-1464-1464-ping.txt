@@ -1,0 +1,60 @@
+PING 169.254.19.204 (169.254.19.204) 78(106) bytes of data.
+86 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.767 ms
+86 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.534 ms
+86 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.501 ms
+86 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.583 ms
+86 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.519 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.501/0.580/0.767/0.101 ms, ipg/ewma 1.050/0.671 ms
+PING 169.254.19.204 (169.254.19.204) 206(234) bytes of data.
+214 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.603 ms
+214 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.528 ms
+214 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.566 ms
+214 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.527 ms
+214 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.520 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.520/0.548/0.603/0.043 ms, ipg/ewma 1.005/0.574 ms
+PING 169.254.19.204 (169.254.19.204) 462(490) bytes of data.
+470 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.687 ms
+470 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.607 ms
+470 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.605 ms
+470 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.603 ms
+470 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.599 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.599/0.620/0.687/0.037 ms, ipg/ewma 1.005/0.652 ms
+PING 169.254.19.204 (169.254.19.204) 974(1002) bytes of data.
+982 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.805 ms
+982 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.741 ms
+982 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.747 ms
+982 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.740 ms
+982 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.751 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.740/0.756/0.805/0.042 ms, ipg/ewma 1.006/0.780 ms
+PING 169.254.19.204 (169.254.19.204) 1350(1378) bytes of data.
+1358 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.913 ms
+1358 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.850 ms
+1358 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.822 ms
+1358 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.848 ms
+1358 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.833 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.822/0.853/0.913/0.036 ms, ipg/ewma 1.037/0.882 ms
+PING 169.254.19.204 (169.254.19.204) 1460(1488) bytes of data.
+1468 bytes from 169.254.19.204: icmp_seq=1 ttl=64 time=0.825 ms
+1468 bytes from 169.254.19.204: icmp_seq=2 ttl=64 time=0.698 ms
+1468 bytes from 169.254.19.204: icmp_seq=3 ttl=64 time=0.670 ms
+1468 bytes from 169.254.19.204: icmp_seq=4 ttl=64 time=0.671 ms
+1468 bytes from 169.254.19.204: icmp_seq=5 ttl=64 time=0.668 ms
+
+--- 169.254.19.204 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.668/0.706/0.825/0.064 ms, ipg/ewma 1.011/0.763 ms
