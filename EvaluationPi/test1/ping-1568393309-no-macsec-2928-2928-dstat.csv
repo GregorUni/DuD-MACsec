@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","raspberrypi",,,,"User:","pi"
-"Cmdline:","dstat -N eth2,macsec0--noheaders --output test1/ping-1568393309-no-macsec-2928-2928-dstat.csv",,,,"Date:","13 Sep 2019 18:48:40 CEST"
-"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-1.364,0.776,96.982,0.878,0,211971.690,19179.282,0,0,0,0,888.564,157.798
