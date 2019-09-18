@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=test
+EVA_DIR=http
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -16,7 +16,7 @@ HOST_ETHERNET_NAME="eno1"
 Remote_PTH="/home/test2" #folder in which the git repository is located
 Remote_MAC_ADR="ec:b1:d7:4b:bc:fd" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
-REMOTE_IP=141.76.55.43 #internet ip
+REMOTE_IP=141.76.55.44 #internet ip
 ETHERNET_IP=169.254.234.92 #ethernet ip
 REMOTE_ETHERNET_NAME="eno1" #name of ethernet interface
 
@@ -94,6 +94,29 @@ eva_iperf() {
     done
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
+
+eva_SimpleHTTPServer() {
+ echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
+    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-wget.txt
+    Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-dstat.txt
+if [ ! -d "$BANDWIDTH_FILE" ]; then
+        touch $BANDWIDTH_FILE
+    fi
+dstat -N eth0,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-dstat.csv > /dev/null 2>&1 &
+ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
+
+for i in `seq 1 $1`; do
+echo -e "Start Http Test #$i"
+wget_output=$(timeout 30 wget http://$4:8000/test.iso -a $BANDWIDTH_FILE)
+if [ $? -ne 0 ]; then
+            echo -e "${RED}Http error${NC}"
+        fi
+rm -f test.iso
+done
+
+ssh root@$REMOTE_IP "kill -9 \$(ps -aux | grep SimpleHTTPServer | grep -v grep | awk '{print \$2}')"
+kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+}
 	
 
 eva() {
@@ -112,8 +135,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 
 		#start ping and iperf tests
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 		
 
 
@@ -132,8 +156,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 		
 
 
@@ -146,8 +171,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
@@ -159,8 +185,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
@@ -172,8 +199,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
@@ -185,8 +213,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
@@ -198,8 +227,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP	
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP	
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -211,8 +241,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
@@ -225,8 +256,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $DEST_IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $DEST_IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
@@ -238,8 +270,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		eva_ping $2 $4 $DEST_IP
-		eva_iperf $1 $2 $3 $DEST_IP
+		#eva_ping $2 $4 $DEST_IP
+		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
 
 
 	else    #case no macsec no encryption
@@ -247,8 +280,9 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		eva_ping $2 $4 $ETHERNET_IP
-		eva_iperf $1 $2 $3 $ETHERNET_IP
+		#eva_ping $2 $4 $ETHERNET_IP
+		#eva_iperf $1 $2 $3 $ETHERNET_IP
+		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP
 
 	fi
 }
