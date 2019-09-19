@@ -742,7 +742,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 
     if (skb->len - ETH_HLEN > macsec->real_dev->mtu) {
         struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
-        printk("Frame too big to send: %d", skb->len - ETH_HLEN);
+        //printk("Frame too big to send: %d", skb->len - ETH_HLEN);
 
 		u64_stats_update_begin(&secy_stats->syncp);
 		secy_stats->stats.OutPktsTooLong++;
@@ -1191,7 +1191,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 	rxsc_stats = this_cpu_ptr(rx_sc->stats);
 
     if (!macsec_validate_skb(skb, secy->icv_len)) {
-        printk("Validation failed, drop!\n");
+      //  printk("Validation failed, drop!\n");
         u64_stats_update_begin(&secy_stats->syncp);
         secy_stats->stats.InPktsBadTag++;
         u64_stats_update_end(&secy_stats->syncp);
@@ -1210,7 +1210,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 			u64_stats_update_begin(&rxsc_stats->syncp);
 			rxsc_stats->stats.InPktsNotUsingSA++;
 			u64_stats_update_end(&rxsc_stats->syncp);
-			printk("handle frame start 4\n");
+			//printk("handle frame start 4\n");
 			goto drop_nosa;
 		}
 
@@ -1236,7 +1236,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 			u64_stats_update_begin(&rxsc_stats->syncp);
 			rxsc_stats->stats.InPktsLate++;
 			u64_stats_update_end(&rxsc_stats->syncp);
-			printk("handle frame start 6\n");
+			//printk("handle frame start 6\n");
 			goto drop;
 		}
 	}
@@ -1356,7 +1356,7 @@ buffer_fragment:
     if(!frag_buff) {
         frag_buff = kmalloc(sizeof(struct macsec_fragmentation_buffer), GFP_ATOMIC);
         if(!frag_buff) {
-            printk("Out of memory...\n");
+           // printk("Out of memory...\n");
             spin_unlock_bh(&fragment_lock);
             return  -ENOMEM;
         }
@@ -1375,7 +1375,7 @@ buffer_fragment:
         } else {
             frag_buff->next = kmalloc(sizeof(struct macsec_fragmentation_buffer), GFP_ATOMIC);
             if(!frag_buff->next) {
-                printk("Out of memory...2\n");
+               // printk("Out of memory...2\n");
                 spin_unlock_bh(&fragment_lock);
                 return -ENOMEM;
             }
@@ -1394,13 +1394,13 @@ buffer_fragment:
         frag_buff->data = NULL;
         frag_buff->len = 0;
 
-        printk("Drop non empty buffer\n");
+       // printk("Drop non empty buffer\n");
     }
 
     frag_buff->data = kmalloc(skb->len, GFP_ATOMIC);
 
     if(!frag_buff->data) {
-        printk("Out of memory...3\n");
+      //  printk("Out of memory...3\n");
         spin_unlock_bh(&fragment_lock);
         return  -ENOMEM;
     }
@@ -2581,7 +2581,7 @@ static int nla_put_secy(struct macsec_secy *secy, struct sk_buff *skb)
 
 	if(secy->key_len != 16 && secy->key_len != 32)
 		{
-			printk("nla_put_secy fehler1\n");
+			//printk("nla_put_secy fehler1\n");
 			goto cancel;
 		}
 
@@ -2969,7 +2969,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
         skb_frag = dev_alloc_skb(frag_len);
 
         if(!skb_frag) {
-            printk("Could not allocate fragment skb \n");
+           // printk("Could not allocate fragment skb \n");
             dev->stats.tx_dropped++;
             return NETDEV_TX_OK;
         }
@@ -2992,7 +2992,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
         if(skb_headroom(skb_frag) >= 2*ETH_ALEN) {
             skb_push(skb_frag, 2 * ETH_ALEN);
         } else {
-            printk("Could not allocate headroom \n");
+            //printk("Could not allocate headroom \n");
             dev->stats.tx_dropped++;
             return NETDEV_TX_OK;
         }
@@ -3002,7 +3002,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             skb_reset_mac_header(skb_frag);
             memcpy(skb_mac_header(skb_frag), skb_mac_header(skb), 2 * ETH_ALEN);
         } else {
-            printk("Could not copy MAC to fragment \n");
+            //printk("Could not copy MAC to fragment \n");
             dev->stats.tx_dropped++;
             return NETDEV_TX_OK;
         }

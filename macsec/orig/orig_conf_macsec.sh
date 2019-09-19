@@ -1,7 +1,8 @@
 #compiling the original macsec.c and insert it into the kernel
-sudo modprobe -r macsec	
+
 sudo make -C /lib/modules/$(uname -r)/build M=$(pwd) macsec.ko
-sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net	
+sudo cp macsec.ko /lib/modules/$(uname -r)/kernel/drivers/net
+sudo modprobe -r macsec		
 sudo modprobe -v macsec
 #iproute2 config
 sudo ip link add link $1 macsec0 type macsec

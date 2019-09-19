@@ -8,17 +8,17 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="/home/test1" #folder in which the git repository is located
-HOST_MAC_ADR="ec:b1:d7:4b:bd:01" #mac adress
+HOST_MAC_ADR="ec:b1:d7:4b:bd:01" #mac adress of ethernet device
 SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eno1"
 
 #variables for remote_pc
 Remote_PTH="/home/test2" #folder in which the git repository is located
-Remote_MAC_ADR="ec:b1:d7:4b:bc:fd" #mac adress
+Remote_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress of ethernet device
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.44 #internet ip
-ETHERNET_IP=169.254.234.92 #ethernet ip
-REMOTE_ETHERNET_NAME="eno1" #name of ethernet interface
+ETHERNET_IP=169.254.248.66 #ethernet ip
+REMOTE_ETHERNET_NAME="enx18d6c70c16d3" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
@@ -61,14 +61,14 @@ eva_ping() {
 
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
-	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
-	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
 
@@ -77,7 +77,7 @@ eva_iperf() {
     BANDWIDTH_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-$3iperf.json
     Dstat_FILE=$EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.txt
     echo -n "[" > $BANDWIDTH_FILE # Clear file
-	dstat -N eth0,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
     for i in `seq 1 $1`; do
         echo -e "Start iperf3 #$i"
         sudo timeout 20 iperf3 -Jc $4 >> $BANDWIDTH_FILE
@@ -92,30 +92,37 @@ eva_iperf() {
             echo -ne "," >> $BANDWIDTH_FILE
         fi;
     done
-	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
 eva_SimpleHTTPServer() {
  echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
     BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-wget.txt
     Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-dstat.txt
-if [ ! -d "$BANDWIDTH_FILE" ]; then
-        touch $BANDWIDTH_FILE
-    fi
-dstat -N eth0,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-dstat.csv > /dev/null 2>&1 &
-ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
+	if [ ! -d "$BANDWIDTH_FILE" ]; then
+	        touch $BANDWIDTH_FILE
+	    fi
+	
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-dstat.csv > /dev/null 2>&1 &
+	ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
+	sleep 4
 
-for i in `seq 1 $1`; do
-echo -e "Start Http Test #$i"
-wget_output=$(timeout 30 wget http://$4:8000/test.iso -a $BANDWIDTH_FILE)
-if [ $? -ne 0 ]; then
-            echo -e "${RED}Http error${NC}"
-        fi
-rm -f test.iso
-done
+	for i in `seq 1 $1`; do
+	echo -e "Start Http Test #$i"
+	wget_output=$(timeout 60 wget http://$4:8000/test.iso  --progress=dot:giga -a $BANDWIDTH_FILE)
+	
+	if [ $? -ne 0 ]; then
+		echo -e "${RED}Http error${NC}"
+	    fi
 
-ssh root@$REMOTE_IP "kill -9 \$(ps -aux | grep SimpleHTTPServer | grep -v grep | awk '{print \$2}')"
-kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+	rm -f test.iso
+
+
+	done
+
+
+	ssh root@$REMOTE_IP "kill -9 \$(ps -aux | grep SimpleHTTPServer | grep -v grep | awk '{print \$2}')"
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 	
 
@@ -292,8 +299,8 @@ mtu_config_for_iperf3()
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
 
-		ssh root@$REMOTE_IP "sudo ip link set dev eno1 mtu $2"
-		sudo ip link set dev eno1 mtu $2
+		ssh root@$REMOTE_IP "sudo ip link set dev $REMOTE_ETHERNET_NAME mtu $2"
+		sudo ip link set dev $HOST_ETHERNET_NAME mtu $2
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
 		sudo ip link set dev macsec0 mtu $1
 	
