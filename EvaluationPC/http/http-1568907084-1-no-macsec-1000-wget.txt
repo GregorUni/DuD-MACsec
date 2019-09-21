@@ -1,2 +1,0 @@
---2019-09-19 17:31:34--  http://169.254.248.66:8000/test.iso
-Verbindungsaufbau zu 169.254.248.66:8000 … fehlgeschlagen: Keine Route zum Zielrechner.
