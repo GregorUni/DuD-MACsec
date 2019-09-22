@@ -74,7 +74,7 @@ eva_ping() {
 
 eva_iperf() {
     echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
-    BANDWIDTH_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-$3iperf.json
+    BANDWIDTH_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-$3-$5-iperf.json
     Dstat_FILE=$EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.txt
     echo -n "[" > $BANDWIDTH_FILE # Clear file
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
@@ -97,8 +97,8 @@ eva_iperf() {
 
 eva_SimpleHTTPServer() {
  echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
-    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-wget.txt
-    Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-dstat.txt
+    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5wget.txt
+    Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-dstat.txt
 	if [ ! -d "$BANDWIDTH_FILE" ]; then
 	        touch $BANDWIDTH_FILE
 	    fi
@@ -144,7 +144,7 @@ eva() {
 		#start ping and iperf tests
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -165,7 +165,7 @@ eva() {
 		
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -180,7 +180,7 @@ eva() {
 		
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
@@ -194,7 +194,7 @@ eva() {
 		
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
@@ -208,7 +208,7 @@ eva() {
 
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
@@ -222,7 +222,7 @@ eva() {
 
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
@@ -236,7 +236,7 @@ eva() {
 
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP	
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -250,7 +250,7 @@ eva() {
 		
 		#eva_ping $2 $4 $IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
@@ -265,7 +265,7 @@ eva() {
 		
 		#eva_ping $2 $4 $DEST_IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
@@ -279,7 +279,7 @@ eva() {
 		
 		#eva_ping $2 $4 $DEST_IP
 		#eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	else    #case no macsec no encryption
@@ -289,7 +289,7 @@ eva() {
 
 		#eva_ping $2 $4 $ETHERNET_IP
 		#eva_iperf $1 $2 $3 $ETHERNET_IP
-		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP
+		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
 }
@@ -328,8 +328,8 @@ eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant
 eva $1 "orig-jumbo" 2928 9000 m #
 eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e" 1464 1500 med 
+eva $1 "macsec-aesgcm-we" 1464 1500 mwe
 eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
