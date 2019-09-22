@@ -97,13 +97,13 @@ eva_iperf() {
 
 eva_SimpleHTTPServer() {
  echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
-    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5wget.txt
+    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-wget.txt
     Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-dstat.txt
 	if [ ! -d "$BANDWIDTH_FILE" ]; then
 	        touch $BANDWIDTH_FILE
 	    fi
 	
-	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-dstat.csv > /dev/null 2>&1 &
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-$1-$2-$3-$-5-dstat.csv > /dev/null 2>&1 &
 	ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
 	sleep 4
 
