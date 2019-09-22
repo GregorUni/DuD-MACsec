@@ -3019,6 +3019,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
     macsec_encrypt_finish(skb, dev);
 
     if(skb_frag) {
+	printk("Fragmentiert");
         skb_frag = macsec_encrypt(skb_frag, dev);
         if (IS_ERR(skb_frag)) {
             if (PTR_ERR(skb_frag) != -EINPROGRESS)
