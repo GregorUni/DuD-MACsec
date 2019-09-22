@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=http
+EVA_DIR=http1
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -330,12 +330,16 @@ eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
 eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
 eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1464 1500 med 
-eva $1 "macsec-aesgcm-we-frag" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
+eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
+eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
+eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
+eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
 eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
 eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
