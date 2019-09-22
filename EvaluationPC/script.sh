@@ -330,8 +330,8 @@ eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
 eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
 eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1464 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1464 1500 mwe
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
