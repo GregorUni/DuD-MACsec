@@ -14,11 +14,11 @@ HOST_ETHERNET_NAME="eno1"
 
 #variables for remote_pc
 Remote_PTH="/home/test2" #folder in which the git repository is located
-Remote_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress of ethernet device
+Remote_MAC_ADR="ec:b1:d7:4b:bc:fd" #mac adress of ethernet device
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.44 #internet ip
-ETHERNET_IP=169.254.248.66 #ethernet ip
-REMOTE_ETHERNET_NAME="enx18d6c70c16d3" #name of ethernet interface
+ETHERNET_IP=169.254.248.68 #ethernet ip
+REMOTE_ETHERNET_NAME="eno1" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 6 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
