@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=http1
+EVA_DIR=final
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
