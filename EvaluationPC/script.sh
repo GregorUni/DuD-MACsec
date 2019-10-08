@@ -97,13 +97,14 @@ eva_iperf() {
 
 eva_SimpleHTTPServer() {
  echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
+ echo -e "Erster Parameter:$1 Zweiter:$2 Dritter:$3 Vierter:$4 Fünfter: $5"
     BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-wget.txt
     Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-dstat.txt
 	if [ ! -d "$BANDWIDTH_FILE" ]; then
 	        touch $BANDWIDTH_FILE
 	    fi
 	
-	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-$1-$2-$3-$-5-dstat.csv > /dev/null 2>&1 &
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-$1-$2-$3-$5-dstat.csv > /dev/null 2>&1 &
 	ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
 	sleep 4
 
@@ -298,12 +299,17 @@ mtu_config_for_iperf3()
 {
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
+echo -e "config for qdisc"
 
 		ssh root@$REMOTE_IP "sudo ip link set dev $REMOTE_ETHERNET_NAME mtu $2"
 		sudo ip link set dev $HOST_ETHERNET_NAME mtu $2
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
 		sudo ip link set dev macsec0 mtu $1
-	
+echo -e "config for qdisc"
+		sudo tc qdisc replace dev $HOST_ETHERNET_NAME root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev $REMOTE_ETHERNET_NAME root pfifo_fast"
+		sudo tc qdisc replace dev macsec0 root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev macsec0 root pfifo_fast"
 sleep 4
 echo -e "end mtu_config for iperf3"
 
