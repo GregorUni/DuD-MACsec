@@ -143,8 +143,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 
 		#start ping and iperf tests
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
@@ -164,8 +164,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
@@ -179,8 +179,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -193,8 +193,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -207,8 +207,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
@@ -221,8 +221,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -235,8 +235,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -249,8 +249,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
@@ -264,8 +264,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $DEST_IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -278,8 +278,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 		
-		#eva_ping $2 $4 $DEST_IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_ping $2 $4 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -288,8 +288,8 @@ eva() {
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
 
-		#eva_ping $2 $4 $ETHERNET_IP
-		#eva_iperf $1 $2 $3 $ETHERNET_IP
+		eva_ping $2 $4 $ETHERNET_IP
+		eva_iperf $1 $2 $3 $ETHERNET_IP
 		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
