@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 5 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -223,7 +223,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
@@ -266,7 +266,7 @@ eva() {
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
