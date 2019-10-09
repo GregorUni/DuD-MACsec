@@ -1,0 +1,14 @@
+"Dstat 0.7.3 CSV output"
+"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
+"Host:","crawler5",,,,"User:","root"
+"Cmdline:","dstat -N enp2s0f1,macsec0--noheaders --output final/ping-1570636709-orig-1500-dstat.csv",,,,"Date:","09 Oct 2019 18:00:08 CEST"
+"total cpu usage",,,,,"dsk/total",,"net/enp2s0f1",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
+2.121,5.320,90.918,1.641,0,156164.714,63494.839,0,0,0,0,2729.308,1806.545
+
+
+"Host:","crawler5",,,,"User:","root"
+"Cmdline:","dstat -N enp2s0f1,macsec0--noheaders --output final/ping-1570636709-orig-1500-dstat.csv",,,,"Date:","09 Oct 2019 18:00:39 CEST"
+"total cpu usage",,,,,"dsk/total",,"net/enp2s0f1",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
+2.191,5.717,90.477,1.614,0,152537.194,65595.306,0,0,0,0,2709.748,1768.662

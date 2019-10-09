@@ -1,0 +1,60 @@
+PING 11.11.11.17 (11.11.11.17) 78(106) bytes of data.
+86 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.372 ms
+86 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.321 ms
+86 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.361 ms
+86 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.282 ms
+86 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.341 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.282/0.335/0.372/0.035 ms, ipg/ewma 0.482/0.353 ms
+PING 11.11.11.17 (11.11.11.17) 206(234) bytes of data.
+214 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.373 ms
+214 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.327 ms
+214 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.321 ms
+214 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.282 ms
+214 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.334 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.282/0.327/0.373/0.033 ms, ipg/ewma 0.460/0.349 ms
+PING 11.11.11.17 (11.11.11.17) 462(490) bytes of data.
+470 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.387 ms
+470 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.334 ms
+470 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.357 ms
+470 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.355 ms
+470 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.279 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.279/0.342/0.387/0.039 ms, ipg/ewma 0.513/0.362 ms
+PING 11.11.11.17 (11.11.11.17) 974(1002) bytes of data.
+982 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.369 ms
+982 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.368 ms
+982 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.366 ms
+982 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.280 ms
+982 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.349 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.280/0.346/0.369/0.037 ms, ipg/ewma 0.492/0.356 ms
+PING 11.11.11.17 (11.11.11.17) 1350(1378) bytes of data.
+1358 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.392 ms
+1358 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.365 ms
+1358 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.366 ms
+1358 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.370 ms
+1358 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.326 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.326/0.363/0.392/0.032 ms, ipg/ewma 0.517/0.376 ms
+PING 11.11.11.17 (11.11.11.17) 1436(1464) bytes of data.
+1444 bytes from 11.11.11.17: icmp_seq=1 ttl=64 time=0.379 ms
+1444 bytes from 11.11.11.17: icmp_seq=2 ttl=64 time=0.377 ms
+1444 bytes from 11.11.11.17: icmp_seq=3 ttl=64 time=0.372 ms
+1444 bytes from 11.11.11.17: icmp_seq=4 ttl=64 time=0.431 ms
+1444 bytes from 11.11.11.17: icmp_seq=5 ttl=64 time=0.431 ms
+
+--- 11.11.11.17 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 2ms
+rtt min/avg/max/mdev = 0.372/0.398/0.431/0.027 ms, ipg/ewma 0.541/0.390 ms
