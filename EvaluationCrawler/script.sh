@@ -48,7 +48,7 @@ make_info() {
 
   tc qdisc > $INFO_FILE
 	ip link show macsec0 >> $INFO_FILE
-	ip link show enp2s0f1 >> $INFO_FILE
+	ip link show $HOST_ETHERNET_NAME >> $INFO_FILE
 	#ip macsec show >> $INFO_FILE
 	ifconfig >> $INFO_FILE
 }
@@ -61,7 +61,7 @@ eva_ping() {
 
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
-	dstat -N enp2s0f1,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
@@ -77,7 +77,7 @@ eva_iperf() {
     BANDWIDTH_FILE=$EVA_DIR/final-$FPREFIX-$1-$2-$3iperf.json
     Dstat_FILE=$EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.txt
     echo -n "[" > $BANDWIDTH_FILE # Clear file
-	dstat -N enp2s0f1,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/iperf3-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &
     for i in `seq 1 $1`; do
         echo -e "Start iperf3 #$i"
         sudo timeout 20 iperf3 -Jc $4 >> $BANDWIDTH_FILE
@@ -93,6 +93,37 @@ eva_iperf() {
         fi;
     done
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+}
+
+eva_SimpleHTTPServer() {
+ echo -e "${GREEN}Start Bandwith Evaluation of $2 with MTU $3${NC}"
+ echo -e "Erster Parameter:$1 Zweiter:$2 Dritter:$3 Vierter:$4 Fünfter: $5"
+    BANDWIDTH_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-wget.txt
+    Dstat_FILE=$EVA_DIR/http-$FPREFIX-$1-$2-$3-$5-dstat.txt
+	if [ ! -d "$BANDWIDTH_FILE" ]; then
+	        touch $BANDWIDTH_FILE
+	    fi
+	
+	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-$1-$2-$3-$5-dstat.csv > /dev/null 2>&1 &
+	ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
+	sleep 4
+
+	for i in `seq 1 $1`; do
+	echo -e "Start Http Test #$i"
+	wget_output=$(timeout 60 wget http://$4:8000/test.iso  --progress=dot:giga -a $BANDWIDTH_FILE)
+	
+	if [ $? -ne 0 ]; then
+		echo -e "${RED}Http error${NC}"
+	    fi
+
+	rm -f test.iso
+
+
+	done
+
+
+	ssh root@$REMOTE_IP "kill -9 \$(ps -aux | grep SimpleHTTPServer | grep -v grep | awk '{print \$2}')"
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 	
 
@@ -114,6 +145,7 @@ eva() {
 		#start ping and iperf tests
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -134,6 +166,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -148,6 +181,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
@@ -161,6 +195,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
@@ -174,6 +209,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
@@ -187,6 +223,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
@@ -200,6 +237,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP	
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -213,6 +251,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
@@ -227,6 +266,7 @@ eva() {
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
@@ -240,6 +280,7 @@ eva() {
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
+		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	else    #case no macsec no encryption
@@ -249,6 +290,7 @@ eva() {
 
 		eva_ping $2 $4 $ETHERNET_IP
 		eva_iperf $1 $2 $3 $ETHERNET_IP
+		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
 }
@@ -258,10 +300,15 @@ mtu_config_for_iperf3()
 #third value + 36 if the mtu of macsec0 is changed
 echo -e "mtu_config for iperf3"
 
-		ssh root@$REMOTE_IP "sudo ip link set dev enp2s0f1 mtu $2"
-		sudo ip link set dev enp2s0f1 mtu $2
+		ssh root@$REMOTE_IP "sudo ip link set dev $REMOTE_ETHERNET_NAME mtu $2"
+		sudo ip link set dev $HOST_ETHERNET_NAME mtu $2
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
 		sudo ip link set dev macsec0 mtu $1
+echo -e "config for qdisc"
+		sudo tc qdisc replace dev $HOST_ETHERNET_NAME root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev $REMOTE_ETHERNET_NAME root pfifo_fast"
+		sudo tc qdisc replace dev macsec0 root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev macsec0 root pfifo_fast"
 	
 sleep 4
 echo -e "end mtu_config for iperf3"
@@ -280,27 +327,27 @@ make_info
 eva $1 "no-macsec-1464" 1000 1464
 eva $1 "no-macsec-1500" 1000 1500
 eva $1 "no-macsec-2928" 1000 2928
-#eva $1 "orig" 1464 1500 m #
-#eva $1 "orig" 1464 1500 mw #
-#eva $1 "orig-jumbo" 1500 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-#eva $1 "orig-jumbo" 2928 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
+eva $1 "orig" 1464 1500 m #
+eva $1 "orig" 1464 1500 mw #
+eva $1 "orig-jumbo" 1500 9000 m #
+eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+eva $1 "orig-jumbo" 2928 9000 m #
+eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
-#eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-#eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
-#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
-#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
-#eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
+eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
