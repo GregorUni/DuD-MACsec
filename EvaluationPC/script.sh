@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final
+EVA_DIR=final1
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -165,8 +165,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -180,8 +180,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
@@ -194,8 +194,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
@@ -208,8 +208,8 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
@@ -222,8 +222,8 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mme ]]; then  #case macsec with morus640 with encryption
@@ -236,8 +236,8 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -250,8 +250,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
@@ -265,8 +265,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
@@ -279,8 +279,8 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
-		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_iperf $1 $2 $3 $DEST_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	else    #case no macsec no encryption
@@ -289,8 +289,8 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $ETHERNET_IP
-		eva_iperf $1 $2 $3 $ETHERNET_IP
-		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
+		#eva_iperf $1 $2 $3 $ETHERNET_IP
+		#eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
 }

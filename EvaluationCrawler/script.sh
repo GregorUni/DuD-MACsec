@@ -105,7 +105,7 @@ eva_SimpleHTTPServer() {
 	    fi
 	
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/Http-$FPREFIX-$1-$2-$3-$5-dstat.csv > /dev/null 2>&1 &
-	ssh root@$REMOTE_IP "cd /home/test2 ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
+	ssh root@$REMOTE_IP "cd $Remote_PTH ; nohup python -m SimpleHTTPServer >/dev/null 2>&1 &"
 	sleep 4
 
 	for i in `seq 1 $1`; do
