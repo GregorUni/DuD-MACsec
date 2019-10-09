@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=test1
+EVA_DIR=final
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -16,8 +16,8 @@ HOST_ETHERNET_NAME="enp2s0f1"
 Remote_PTH="~" #folder in which the git repository is located
 Remote_MAC_ADR="00:15:17:d9:99:a7" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
-REMOTE_IP=141.76.55.43 #internet ip
-ETHERNET_IP=11.11.11.13 #ethernet ip
+REMOTE_IP=141.76.55.44 #internet ip
+ETHERNET_IP=11.11.11.16 #ethernet ip
 REMOTE_ETHERNET_NAME="enp2s0f1" #name of ethernet interface
 
 #Cipher configs for iproute2
@@ -67,7 +67,7 @@ eva_ping() {
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1488 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 60 ping -A $3 -c 50000 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -145,7 +145,7 @@ eva() {
 		#start ping and iperf tests
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -166,7 +166,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
@@ -181,7 +181,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mce ]]; then #case macsec with chachapoly and encryption
@@ -195,7 +195,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == awe ]]; then #case macsec with aegis128l without encryption
@@ -209,7 +209,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
 	elif [[ $5 == ae ]]; then #case macsec with aegis128l with encryption
@@ -237,7 +237,7 @@ eva() {
 
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP	
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	elif [[ $5 == mmwe ]]; then  #case macsec with morus640 without encryption
@@ -251,7 +251,7 @@ eva() {
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
 	elif [[ $5 == m ]]; then  #case macsec original with encryption
@@ -280,7 +280,7 @@ eva() {
 		
 		eva_ping $2 $4 $DEST_IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
 	else    #case no macsec no encryption
@@ -290,7 +290,7 @@ eva() {
 
 		eva_ping $2 $4 $ETHERNET_IP
 		eva_iperf $1 $2 $3 $ETHERNET_IP
-		eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
 }
