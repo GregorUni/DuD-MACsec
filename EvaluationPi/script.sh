@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=test1
+EVA_DIR=final
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -262,6 +262,11 @@ echo -e "mtu_config for iperf3"
 		sudo ip link set dev $HOST_ETHERNET_NAME mtu $2
 		ssh root@$REMOTE_IP "sudo ip link set dev macsec0 mtu $1"
 		sudo ip link set dev macsec0 mtu $1
+echo -e "config for qdisc"
+		sudo tc qdisc replace dev $HOST_ETHERNET_NAME root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev $REMOTE_ETHERNET_NAME root pfifo_fast"
+		sudo tc qdisc replace dev macsec0 root pfifo_fast
+		ssh root@$REMOTE_IP "sudo tc qdisc replace dev macsec0 root pfifo_fast"
 	
 sleep 4
 echo -e "end mtu_config for iperf3"
