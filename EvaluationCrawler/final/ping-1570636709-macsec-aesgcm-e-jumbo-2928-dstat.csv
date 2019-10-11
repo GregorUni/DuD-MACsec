@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","crawler5",,,,"User:","root"
-"Cmdline:","dstat -N enp2s0f1,macsec0--noheaders --output final/ping-1570636709-macsec-aesgcm-e-jumbo-2928-dstat.csv",,,,"Date:","09 Oct 2019 18:04:41 CEST"
-"total cpu usage",,,,,"dsk/total",,"net/enp2s0f1",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-2.745,8.558,87.326,1.370,0,126462.883,63903.896,0,0,0,0,2641.406,1531.734
