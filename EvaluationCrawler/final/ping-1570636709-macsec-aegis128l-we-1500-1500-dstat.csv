@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","crawler5",,,,"User:","root"
-"Cmdline:","dstat -N enp2s0f1,macsec0--noheaders --output final/ping-1570636709-macsec-aegis128l-we-1500-1500-dstat.csv",,,,"Date:","09 Oct 2019 18:08:48 CEST"
-"total cpu usage",,,,,"dsk/total",,"net/enp2s0f1",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-2.814,11.008,84.968,1.210,0,107622.830,58673.335,0,0,0,0,2663.767,1353.523

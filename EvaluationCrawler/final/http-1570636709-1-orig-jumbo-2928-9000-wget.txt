@@ -1,5 +1,0 @@
---2019-10-09 18:02:16--  http://10.10.12.2:8000/test.iso
-Verbindungsaufbau zu 10.10.12.2:8000 … verbunden.
-HTTP-Anforderung gesendet, auf Antwort wird gewartet … 404 File not found
-2019-10-09 18:02:16 FEHLER 404: File not found.
-
