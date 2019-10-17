@@ -1,3 +1,3 @@
-/home/test1/DuD-MACsec/macsec/orig/macsec.ko
-/home/test1/DuD-MACsec/macsec/orig/macsec.o
+/root/DuD-MACsec/macsec/orig/macsec.ko
+/root/DuD-MACsec/macsec/orig/macsec.o
 
