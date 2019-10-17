@@ -1,0 +1,55 @@
+qdisc noqueue 0: dev lo root refcnt 2 
+qdisc pfifo_fast 8003: dev eth0 root refcnt 6 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 8002: dev enp2s0f1 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 8004: dev enx18d6c70c0a7e root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+qdisc pfifo_fast 8009: dev macsec0 root refcnt 2 bands 3 priomap  1 2 2 2 1 2 0 0 1 1 1 1 1 1 1 1
+14: macsec0@enp2s0f1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 00:15:17:d9:99:a7 brd ff:ff:ff:ff:ff:ff
+4: enp2s0f1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 00:15:17:d9:99:a7 brd ff:ff:ff:ff:ff:ff
+enp2s0f1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 11.11.11.16  netmask 255.255.255.0  broadcast 11.11.11.255
+        inet6 fe80::215:17ff:fed9:99a7  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:17:d9:99:a7  txqueuelen 1000  (Ethernet)
+        RX packets 1818381  bytes 773119117 (737.3 MiB)
+        RX errors 0  dropped 117  overruns 0  frame 0
+        TX packets 66649496  bytes 88825746912 (82.7 GiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device interrupt 19  memory 0xfe880000-fe8a0000  
+
+enx18d6c70c0a7e: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 141.76.55.44  netmask 255.255.255.192  broadcast 141.76.55.63
+        inet6 fe80::1ad6:c7ff:fe0c:a7e  prefixlen 64  scopeid 0x20<link>
+        ether 18:d6:c7:0c:0a:7e  txqueuelen 1000  (Ethernet)
+        RX packets 2178  bytes 401808 (392.3 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2114  bytes 542985 (530.2 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+eth0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 11.11.11.15  netmask 255.255.255.0  broadcast 11.11.11.255
+        ether 3c:d9:2b:02:92:0d  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+        device interrupt 18  
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Lokale Schleife)
+        RX packets 372  bytes 159288 (155.5 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 372  bytes 159288 (155.5 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+macsec0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.10.12.1  netmask 255.255.255.0  broadcast 10.10.12.255
+        inet6 fe80::215:17ff:fed9:99a7  prefixlen 64  scopeid 0x20<link>
+        ether 00:15:17:d9:99:a7  txqueuelen 1000  (Ethernet)
+        RX packets 309560  bytes 234199049 (223.3 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 733461  bytes 595118692 (567.5 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
