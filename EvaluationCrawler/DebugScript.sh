@@ -93,7 +93,7 @@ eva_iperf() {
         fi;
     done
 	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
-	kill `ps -ef | grep iperf3 | grep -v grep | awk '{print $2}'`
+	pkill iperf3
 }
 
 eva_SimpleHTTPServer() {
@@ -155,16 +155,19 @@ eva() {
 	elif [[ $5 == med ]]; then #case macsec with aes(gcm) and encryption
 		IP=$DEST_IP
 		#loading macsec with fragmentation and crypto extension
-
+		sudo timeout 20 iperf3 -Jc $4 >> test1.json
 		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec ; sh conf-macsec.sh;"
 		cd ../macsec/ ;  sh conf-macsec.sh
 		cd ../EvaluationCrawler/
 		
+		sudo timeout 20 iperf3 -Jc $4 >> test2.json
 		ssh root@$REMOTE_IP "sh DuD-MACsec/EvaluationCrawler/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
 
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
+		
+		sudo timeout 20 iperf3 -Jc $4 >> test3.json
 		
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
