@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final
+EVA_DIR=final1
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
