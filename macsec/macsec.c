@@ -784,11 +784,9 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 			  secy->icv_len;
 		aead_request_set_crypt(req, sg, sg, len, iv);
 		aead_request_set_ad(req, macsec_hdr_len(sci_present));
-		printk("encrypt on \n");
 	} else {
 		aead_request_set_crypt(req, sg, sg, 0, iv);
 		aead_request_set_ad(req, skb->len - secy->icv_len);
-		printk("encrypt off \n");
 	}
 
 	macsec_skb_cb(skb)->req = req;

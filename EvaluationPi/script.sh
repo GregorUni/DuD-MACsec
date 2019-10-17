@@ -286,7 +286,7 @@ eva $1 "no-macsec-1464" 1000 1464
 eva $1 "no-macsec-1500" 1000 1500
 eva $1 "no-macsec-2928" 1000 2928
 eva $1 "orig" 1464 1500 m #
-eva $1 "orig" 1464 1500 mw #
+eva $1 "orig-we" 1464 1500 mw #
 eva $1 "orig-jumbo" 1500 9000 m #
 eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
 eva $1 "orig-jumbo" 2928 9000 m #

@@ -324,15 +324,15 @@ echo -e "end mtu_config for iperf3"
 # fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec" 1000 1464
-eva $1 "no-macsec" 1000 1500
-eva $1 "no-macsec" 1000 2928
-eva $1 "orig" 1464 1500 m #
-eva $1 "orig" 1464 1500 mw #
+eva $1 "no-macsec-1464" 1000 1464
+eva $1 "no-macsec-1500" 1000 1500
+eva $1 "no-macsec-2928" 1000 2928
+eva $1 "orig-e" 1464 1500 m #
+eva $1 "orig-we" 1464 1500 mw #
 eva $1 "orig-jumbo" 1500 9000 m #
-eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-eva $1 "orig-jumbo" 2928 9000 m #
-eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
+eva $1 "orig-jumbo-without-encryption-1500" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+eva $1 "orig-jumbo-2928" 2928 9000 m #
+eva $1 "orig-jumbo-without-encryption-2928" 2928 9000 mw #
 #testcases with frag 
 eva $1 "macsec-aesgcm-e" 1464 1500 med 
 eva $1 "macsec-aesgcm-we" 1464 1500 mwe
