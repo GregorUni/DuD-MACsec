@@ -165,7 +165,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
@@ -180,7 +180,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
+		eva_iperf $1 $2 $3 $DEST_IP # 1500 1500 ; 1464 1500 ; 2936 1500
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -194,7 +194,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -208,7 +208,7 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 		
@@ -222,7 +222,7 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -250,7 +250,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 	
@@ -265,7 +265,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -279,7 +279,7 @@ eva() {
 		make_info $2 $4
 		
 		eva_ping $2 $4 $DEST_IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
@@ -289,7 +289,7 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $ETHERNET_IP
-		#eva_iperf $1 $2 $3 $ETHERNET_IP
+		eva_iperf $1 $2 $3 $ETHERNET_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $ETHERNET_IP $4
 
 	fi
@@ -336,8 +336,11 @@ eva $1 "orig-jumbo-without-encryption-2928" 2928 9000 mw #
 #testcases with frag 
 eva $1 "macsec-aesgcm-e" 1464 1500 med 
 eva $1 "macsec-aesgcm-we" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med
+eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce 
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
+eva $1 "macsec-morus640-e-frag" 1500 1500 mme
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
