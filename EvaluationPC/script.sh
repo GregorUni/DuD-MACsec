@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final1
+EVA_DIR=final2
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -16,7 +16,7 @@ HOST_ETHERNET_NAME="eno1"
 Remote_PTH="/home/test2" #folder in which the git repository is located
 Remote_MAC_ADR="ec:b1:d7:4b:bc:fd" #mac adress of ethernet device
 DEST_IP=10.10.12.2 #macsec ip
-REMOTE_IP=141.76.55.44 #internet ip
+REMOTE_IP=141.76.55.43 #internet ip
 ETHERNET_IP=169.254.248.68 #ethernet ip
 REMOTE_ETHERNET_NAME="eno1" #name of ethernet interface
 
@@ -145,7 +145,7 @@ eva() {
 		#start ping and iperf tests
 		eva_ping $2 $4 $IP
 		eva_iperf $1 $2 $3 $DEST_IP
-		eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
+		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 		
 
 
