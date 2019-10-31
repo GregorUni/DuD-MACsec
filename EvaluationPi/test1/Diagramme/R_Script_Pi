@@ -442,6 +442,7 @@ ggtitle("Ping Tests von Verschlüsselungsalgorthmen") +labs(color = "Algorithmen
 ###############################################################################################
 
 library(scales)
+
 fragDstat <- read.csv(file="iperf3-1568395527-100-macsec-aesgcm-e-frag-dstat.csv",skip = 5, header=TRUE) 
 cpuaesfrag <- 100 - fragDstat[3] 
 cpuaesfrag1 <- head(cpuaesfrag,1019)

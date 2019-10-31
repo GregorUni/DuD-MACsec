@@ -8,17 +8,17 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="~" #folder in which the git repository is located
-HOST_MAC_ADR="ec:08:6b:1c:25:04" #mac adress
+HOST_MAC_ADR="ec:08:6b:1c:24:42" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
-HOST_ETHERNET_NAME="eth2"
+HOST_ETHERNET_NAME="eth1"
 
 #variables for remote_pc
 Remote_PTH=/home/pi #folder in which the git repository is located
-Remote_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress
+Remote_MAC_ADR="ec:08:6b:1c:25:04" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
 REMOTE_IP=141.76.55.43 #internet ip
-ETHERNET_IP=169.254.61.115 #ethernet ip
-REMOTE_ETHERNET_NAME="eth2" #name of ethernet interface
+ETHERNET_IP=169.254.244.105 #ethernet ip
+REMOTE_ETHERNET_NAME="eth1" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
@@ -292,14 +292,21 @@ eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant
 eva $1 "orig-jumbo" 2928 9000 m #
 eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e-1464" 1464 1500 med 
-eva $1 "macsec-aesgcm-we-1464" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med 
+eva $1 "macsec-aesgcm-e" 1464 1500 med 
+eva $1 "macsec-aesgcm-we" 1464 1500 mwe
+eva $1 "macsec-aesgcm-e-frag" 1500 1500 med
+eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce 
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
+eva $1 "macsec-morus640-e-frag" 1500 1500 mme
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe 
+eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
+eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
+eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
+eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
+eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
 eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
 eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
