@@ -236,7 +236,7 @@ eva() {
 		make_info $2 $4
 
 		eva_ping $2 $4 $IP
-		#eva_iperf $1 $2 $3 $DEST_IP
+		eva_iperf $1 $2 $3 $DEST_IP
 		#eva_SimpleHTTPServer $1 $2 $3 $DEST_IP $4
 
 
