@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final2
+EVA_DIR=final4
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -324,35 +324,35 @@ echo -e "end mtu_config for iperf3"
 # fourth parameter eno 1 mtu
 init
 make_info
-eva $1 "no-macsec-1464" 1000 1464
-eva $1 "no-macsec-1500" 1000 1500
-eva $1 "no-macsec-2928" 1000 2928
-eva $1 "orig-e" 1464 1500 m #
-eva $1 "orig-we" 1464 1500 mw #
-eva $1 "orig-jumbo" 1500 9000 m #
-eva $1 "orig-jumbo-without-encryption-1500" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-eva $1 "orig-jumbo-2928" 2928 9000 m #
-eva $1 "orig-jumbo-without-encryption-2928" 2928 9000 mw #
+#eva $1 "no-macsec-1464" 1000 1464
+#eva $1 "no-macsec-1500" 1000 1500
+#eva $1 "no-macsec-2928" 1000 2928
+#eva $1 "orig-e" 1464 1500 m #
+#eva $1 "orig-we" 1464 1500 mw #
+#eva $1 "orig-jumbo" 1500 9000 m #
+#eva $1 "orig-jumbo-without-encryption-1500" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+#eva $1 "orig-jumbo-2928" 2928 9000 m #
+#eva $1 "orig-jumbo-without-encryption-2928" 2928 9000 mw #
 #testcases with frag 
-eva $1 "macsec-aesgcm-e" 1464 1500 med 
-eva $1 "macsec-aesgcm-we" 1464 1500 mwe
-eva $1 "macsec-aesgcm-e-frag" 1500 1500 med
-eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce 
-eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
-eva $1 "macsec-morus640-e-frag" 1500 1500 mme
-eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
-eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
-eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
-eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
-eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
-eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
-eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+#eva $1 "macsec-aesgcm-e" 1464 1500 med 
+#eva $1 "macsec-aesgcm-we" 1464 1500 mwe
+#eva $1 "macsec-aesgcm-e-frag" 1500 1500 med
+#eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce 
+#eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
+#eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
+#eva $1 "macsec-morus640-e-frag" 1500 1500 mme
+#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
+#eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
+#eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
+#eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
+#eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
+#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+#eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
+#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
 eva $1 "macsec-morus640-e-1500" 1464 1500 mme
 eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
