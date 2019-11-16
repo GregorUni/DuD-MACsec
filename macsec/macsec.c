@@ -2974,6 +2974,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
 	if (!secy->operational) {
 		kfree_skb(skb);
 		dev->stats.tx_dropped++;
+		printk("xmit 1");
 		return NETDEV_TX_OK;
 	}
 	//
@@ -2986,6 +2987,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             // Minimum Ethernet Frame length
             new_skb_len -= 60 - frag_len;
             frag_len = 60;
+	printk("xmit 2");
         }
         //Allocate a new &sk_buff and assign it a usage count of one
         skb_frag = dev_alloc_skb(frag_len);
@@ -2993,6 +2995,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
         if(!skb_frag) {
             printk("Could not allocate fragment skb \n");
             dev->stats.tx_dropped++;
+            printk("xmit 3");
             return NETDEV_TX_OK;
         }
 
@@ -3002,6 +3005,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             old = skb;
             skb = skb_copy(skb, GFP_ATOMIC);
             consume_skb(old);
+		printk("xmit 4");
         }
         // Increase the headroom of an empty &sk_buff by reducing the tail room
         // macsec_extra_len = sectagLen(10 (+ 8) Bytes) + ethernet hhdr (2 Bytes)
@@ -3013,9 +3017,11 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
 
         if(skb_headroom(skb_frag) >= 2*ETH_ALEN) {
             skb_push(skb_frag, 2 * ETH_ALEN);
+printk("xmit 5");
         } else {
             printk("Could not allocate headroom \n");
             dev->stats.tx_dropped++;
+printk("xmit 6");
             return NETDEV_TX_OK;
         }
 
@@ -3023,9 +3029,11 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
             eth = eth_hdr(skb);
             skb_reset_mac_header(skb_frag);
             memcpy(skb_mac_header(skb_frag), skb_mac_header(skb), 2 * ETH_ALEN);
+printk("xmit 7");
         } else {
             printk("Could not copy MAC to fragment \n");
             dev->stats.tx_dropped++;
+	printk("xmit 8");
             return NETDEV_TX_OK;
         }
 
@@ -3035,6 +3043,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
     if (IS_ERR(skb)) {
         if (PTR_ERR(skb) != -EINPROGRESS)
             dev->stats.tx_dropped++;
+printk("xmit 9 fehler encryption");
         return NETDEV_TX_OK;
     }
     macsec_count_tx(skb, &macsec->secy.tx_sc, macsec_skb_cb(skb)->tx_sa);
@@ -3042,9 +3051,11 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
 
     if(skb_frag) {
         skb_frag = macsec_encrypt(skb_frag, dev);
+printk("xmit 10");
         if (IS_ERR(skb_frag)) {
             if (PTR_ERR(skb_frag) != -EINPROGRESS)
                 dev->stats.tx_dropped++;
+printk("xmit 11");
             return NETDEV_TX_OK;
         }
         macsec_count_tx(skb_frag, &macsec->secy.tx_sc, macsec_skb_cb(skb_frag)->tx_sa);
@@ -3053,6 +3064,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
 
     len = skb->len;
     if(skb_frag) {
+printk("xmit 12");
         spin_lock_bh(&xmit_lock);
     }
 
@@ -3061,6 +3073,7 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
     count_tx(dev, ret, len);
 
     if(ret < 0) {
+printk("xmit 13");
         return ret;
     }
 
@@ -3068,14 +3081,15 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
         len = skb_frag->len;
         ret = dev_queue_xmit(skb_frag);
         count_tx(dev, ret, len);
-
+printk("xmit 14");
         if(ret < 0) {
+printk("xmit 15");
             return ret;
         }
 
         spin_unlock_bh(&xmit_lock);
     }
-
+printk("xmit ende");
     return ret;
 }
 
