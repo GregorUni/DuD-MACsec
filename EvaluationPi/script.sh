@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="~" #folder in which the git repository is located
-HOST_MAC_ADR="ec:08:6b:1c:24:42" #mac adress
+HOST_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eth1"
 
