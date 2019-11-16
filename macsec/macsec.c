@@ -3023,7 +3023,7 @@ printk("xmit 0\n");
         }
         // Increase the headroom of an empty &sk_buff by reducing the tail room
         // macsec_extra_len = sectagLen(10 (+ 8) Bytes) + ethernet hhdr (2 Bytes)
-        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) + 2);
+        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) - 2);
         skb_split(skb, skb_frag, new_skb_len);
         skb_reset_network_header(skb_frag);
 
