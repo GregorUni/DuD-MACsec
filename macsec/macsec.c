@@ -705,17 +705,22 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 						       MACSEC_NEEDED_HEADROOM,
 						       MACSEC_NEEDED_TAILROOM,
 						       GFP_ATOMIC);
+		printk("macsec_encrypt 1\n");
 		if (likely(nskb)) {
 			consume_skb(skb);
 			skb = nskb;
+printk("macsec_encrypt 2\n");
 		} else {
 			macsec_txsa_put(tx_sa);
 			kfree_skb(skb);
+printk("macsec_encrypt 3\n");
 			return ERR_PTR(-ENOMEM);
 		}
 	} else {
 		skb = skb_unshare(skb, GFP_ATOMIC);
+printk("macsec_encrypt 4\n");
 		if (!skb) {
+printk("macsec_encrypt 5\n");
 			macsec_txsa_put(tx_sa);
 			return ERR_PTR(-ENOMEM);
 		}
@@ -726,11 +731,12 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 	sci_present = send_sci(secy);
 	hh = skb_push(skb, macsec_extra_len(sci_present));
 	memmove(hh, eth, 2 * ETH_ALEN);
-
+printk("macsec_encrypt 6\n");
     pn = tx_sa_update_pn(tx_sa, secy);
     if (pn == 0) {
         macsec_txsa_put(tx_sa);
         kfree_skb(skb);
+printk("macsec_encrypt 7\n");
         return ERR_PTR(-ENOLINK);
     }
 
@@ -738,12 +744,12 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
     macsec_set_shortlen(hh, unprotected_len - 2 * ETH_ALEN, macsec_skb_cb(skb)->more_fragments);
 
 	skb_put(skb, secy->icv_len);
-
+printk("macsec_encrypt 8\n");
 
     if (skb->len - ETH_HLEN > macsec->real_dev->mtu) {
         struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
         printk("Frame too big to send: %d", skb->len - ETH_HLEN);
-
+printk("macsec_encrypt 9\n");
 		u64_stats_update_begin(&secy_stats->syncp);
 		secy_stats->stats.OutPktsTooLong++;
 		u64_stats_update_end(&secy_stats->syncp);
@@ -756,6 +762,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 	ret = skb_cow_data(skb, 0, &trailer);
 	if (unlikely(ret < 0)) {
 		macsec_txsa_put(tx_sa);
+printk("macsec_encrypt 10\n");
 		kfree_skb(skb);
 		return ERR_PTR(ret);
 	}
@@ -764,6 +771,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 	if (!req) {
 		macsec_txsa_put(tx_sa);
 		kfree_skb(skb);
+printk("macsec_encrypt 11\n");
 		return ERR_PTR(-ENOMEM);
 	}
 
@@ -775,6 +783,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 		aead_request_free(req);
 		macsec_txsa_put(tx_sa);
 		kfree_skb(skb);
+printk("macsec_encrypt 12\n");
 		return ERR_PTR(ret);
 	}
 
@@ -784,6 +793,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 			  secy->icv_len;
 		aead_request_set_crypt(req, sg, sg, len, iv);
 		aead_request_set_ad(req, macsec_hdr_len(sci_present));
+printk("macsec_encrypt 13\n");
 	} else {
 		aead_request_set_crypt(req, sg, sg, 0, iv);
 		aead_request_set_ad(req, skb->len - secy->icv_len);
@@ -791,24 +801,27 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 
 	macsec_skb_cb(skb)->req = req;
 	macsec_skb_cb(skb)->tx_sa = tx_sa;
+printk("macsec_encrypt 14\n");
 	aead_request_set_callback(req, 0, macsec_encrypt_done, skb);
 
 	dev_hold(skb->dev);
 	ret = crypto_aead_encrypt(req);
 	if (ret == -EINPROGRESS) {
+printk("macsec_encrypt 15\n");
 		return ERR_PTR(ret);
 	} else if (ret != 0) {
 		dev_put(skb->dev);
 		kfree_skb(skb);
 		aead_request_free(req);
 		macsec_txsa_put(tx_sa);
+printk("macsec_encrypt 16\n");
 		return ERR_PTR(-EINVAL);
 	}
 
 	dev_put(skb->dev);
 	aead_request_free(req);
 	macsec_txsa_put(tx_sa);
-
+printk("macsec_encrypt ende\n");
 	return skb;
 }
 
