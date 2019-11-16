@@ -2996,6 +2996,7 @@ printk("xmit 0\n");
         size_t new_skb_len, frag_len;
         struct ethhdr *eth;
         new_skb_len = macsec->real_dev->mtu - macsec_sectag_len(sci_present) - secy->icv_len - 2 + ETH_HLEN;// 2x Double ETH_PROTO
+	prinkt(" %zu new_skb_len", new_skb_len);
         frag_len = skb->len + ETH_HLEN + macsec_sectag_len(sci_present) + secy->icv_len - new_skb_len;
         if(frag_len < 60) {
             // Minimum Ethernet Frame length
