@@ -794,7 +794,9 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 	aead_request_set_callback(req, 0, macsec_encrypt_done, skb);
 
 	dev_hold(skb->dev);
+	
 	ret = crypto_aead_encrypt(req);
+printk("ret %d",ret);
 	if (ret == -EINPROGRESS) {
 		return ERR_PTR(ret);
 	} else if (ret != 0) {
