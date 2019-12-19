@@ -315,8 +315,6 @@ echo -e "config for qdisc"
 sleep 4
 echo -e "end mtu_config for iperf3"
 
-
-
 }
 
 #todo interface mit variablen versehen. path problem lösen. nur noch eine macsec script datei erstellen mit vielen verschiedenen variablen.

@@ -1,1 +1,1 @@
-cmd_/home/gregor/DuD-MACsec/macsec/macsec.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/gregor/DuD-MACsec/macsec/macsec.ko /home/gregor/DuD-MACsec/macsec/macsec.o /home/gregor/DuD-MACsec/macsec/macsec.mod.o ;  true
+cmd_/home/test1/DuD-MACsec/macsec/macsec.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/test1/DuD-MACsec/macsec/macsec.ko /home/test1/DuD-MACsec/macsec/macsec.o /home/test1/DuD-MACsec/macsec/macsec.mod.o ;  true
