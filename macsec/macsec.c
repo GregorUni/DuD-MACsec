@@ -742,7 +742,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 
     if (skb->len - ETH_HLEN > macsec->real_dev->mtu) {
         struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
-        printk("Frame too big to send: %d", skb->len - ETH_HLEN);
+        //printk("Frame too big to send: %d", skb->len - ETH_HLEN);
 
 		u64_stats_update_begin(&secy_stats->syncp);
 		secy_stats->stats.OutPktsTooLong++;
@@ -794,9 +794,7 @@ static struct sk_buff *macsec_encrypt(struct sk_buff *skb,
 	aead_request_set_callback(req, 0, macsec_encrypt_done, skb);
 
 	dev_hold(skb->dev);
-	
 	ret = crypto_aead_encrypt(req);
-printk("ret %d",ret);
 	if (ret == -EINPROGRESS) {
 		return ERR_PTR(ret);
 	} else if (ret != 0) {
@@ -1076,7 +1074,6 @@ static void handle_not_macsec(struct sk_buff *skb)
 	 * Strict, frames without a SecTAG are received, counted, and
 	 * delivered to the Controlled Port
 	 */
-	printk("macsec not_macsec start");
 	list_for_each_entry_rcu(macsec, &rxd->secys, secys) {
 		struct sk_buff *nskb;
 		struct pcpu_secy_stats *secy_stats = this_cpu_ptr(macsec->stats);
@@ -1090,10 +1087,9 @@ static void handle_not_macsec(struct sk_buff *skb)
 
 		/* deliver on this port */
 		nskb = skb_clone(skb, GFP_ATOMIC);
-		if (!nskb){
-			printk("macsec not_macsec fehler 1");
+		if (!nskb)
 			break;
-		}
+
 		nskb->dev = macsec->secy.netdev;
 
 		if (netif_rx(nskb) == NET_RX_SUCCESS) {
@@ -1128,33 +1124,25 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
     int ret;
     bool more_fragments = false;
 	if (skb_headroom(skb) < ETH_HLEN)
-{	printk("macsec_handle_frame fehler1\n");
 		goto drop_direct;
-}
+
 	hdr = macsec_ethhdr(skb);
 	if (hdr->eth.h_proto != htons(ETH_P_MACSEC)) {
-	printk("hdr->eth.h_proto %d", hdr->eth.h_proto);
-	printk("htons(ETH_P_MACSEC) %d",htons(ETH_P_MACSEC));
 		handle_not_macsec(skb);
 		/* and deliver to the uncontrolled port */
-		printk("macsec_handle_frame fehler2\n");
 		return RX_HANDLER_PASS;
 	}
 
 	skb = skb_unshare(skb, GFP_ATOMIC);
 	if (!skb) {
 		*pskb = NULL;
-		printk("macsec_handle_frame fehler3\n");
 		return RX_HANDLER_CONSUMED;
 	}
 
 	pulled_sci = pskb_may_pull(skb, macsec_extra_len(true));
 	if (!pulled_sci) {
 		if (!pskb_may_pull(skb, macsec_extra_len(false)))
-		{
-		printk("macsec_handle_frame fehler4\n");
 			goto drop_direct;
-		}
 	}
 
 	hdr = macsec_ethhdr(skb);
@@ -1170,10 +1158,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 	/* now, pull the extra length */
 	if (hdr->tci_an & MACSEC_TCI_SC) {
 		if (!pulled_sci)
-			{
-			printk("macsec_handle_frame fehler5\n");
 			goto drop_direct;
-			}
 	}
 	/* ethernet header is part of crypto processing */
 	skb_push(skb, ETH_HLEN);
@@ -1193,14 +1178,12 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 		if (sc) {
 			secy = &macsec->secy;
 			rx_sc = sc;
-			//printk("macsec_handle_frame fehler6\n");
 			break;
 		}
 	}
 
-	if (!secy){printk("macsec_handle_frame fehler7\n");
+	if (!secy)
 		goto nosci;
-	}
 
 	dev = secy->netdev;
 	macsec = macsec_priv(dev);
@@ -1208,7 +1191,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 	rxsc_stats = this_cpu_ptr(rx_sc->stats);
 
     if (!macsec_validate_skb(skb, secy->icv_len)) {
-       printk("macsec_handle_frame fehler8\n");
+      //  printk("Validation failed, drop!\n");
         u64_stats_update_begin(&secy_stats->syncp);
         secy_stats->stats.InPktsBadTag++;
         u64_stats_update_end(&secy_stats->syncp);
@@ -1227,7 +1210,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 			u64_stats_update_begin(&rxsc_stats->syncp);
 			rxsc_stats->stats.InPktsNotUsingSA++;
 			u64_stats_update_end(&rxsc_stats->syncp);
-			printk("macsec_handle_frame fehler9\n");
+			//printk("handle frame start 4\n");
 			goto drop_nosa;
 		}
 
@@ -1237,7 +1220,6 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
         u64_stats_update_begin(&rxsc_stats->syncp);
         rxsc_stats->stats.InPktsUnusedSA++;
         u64_stats_update_end(&rxsc_stats->syncp);
-	printk("macsec_handle_frame fragmentierung start\n");
         goto strip;
     }
 
@@ -1254,7 +1236,7 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 			u64_stats_update_begin(&rxsc_stats->syncp);
 			rxsc_stats->stats.InPktsLate++;
 			u64_stats_update_end(&rxsc_stats->syncp);
-			printk("macsec_handle_frame fehler10\n");
+			//printk("handle frame start 6\n");
 			goto drop;
 		}
 	}
@@ -1274,12 +1256,10 @@ static rx_handler_result_t macsec_handle_frame(struct sk_buff **pskb)
 		}
 		rcu_read_unlock();
 		*pskb = NULL;
-		printk("macsec_handle_frame fehler11\n");
 		return RX_HANDLER_CONSUMED;
 	}
 
 	if (!macsec_post_decrypt(skb, secy, pn)){
-		printk("macsec_handle_frame fehler12\n");
 		goto drop;
 	}
 strip:
@@ -1288,7 +1268,7 @@ strip:
     }
     macsec_finalize_skb(skb, secy->icv_len,
                         macsec_extra_len(macsec_skb_cb(skb)->has_sci));
-	printk("macsec_handle_frame fragmentation start 2\n");
+
     goto check_fragmentation;
 
 check_fragmentation:
@@ -1329,7 +1309,6 @@ check_fragmentation:
             skb = skb_copy_expand(skb, 0, frag_buff->len - 2*ETH_ALEN, GFP_ATOMIC);
             if (!skb) {
                 spin_unlock_bh(&fragment_lock);
-		printk("macsec_handle_frame fehler13\n");
                 return -ENOMEM;
             }
             consume_skb(old_skb);
@@ -1377,7 +1356,7 @@ buffer_fragment:
     if(!frag_buff) {
         frag_buff = kmalloc(sizeof(struct macsec_fragmentation_buffer), GFP_ATOMIC);
         if(!frag_buff) {
-           printk("macsec_handle_frame fehler14\n");
+           // printk("Out of memory...\n");
             spin_unlock_bh(&fragment_lock);
             return  -ENOMEM;
         }
@@ -1396,7 +1375,7 @@ buffer_fragment:
         } else {
             frag_buff->next = kmalloc(sizeof(struct macsec_fragmentation_buffer), GFP_ATOMIC);
             if(!frag_buff->next) {
-                printk("macsec_handle_frame fehler15\n");
+               // printk("Out of memory...2\n");
                 spin_unlock_bh(&fragment_lock);
                 return -ENOMEM;
             }
@@ -1415,13 +1394,13 @@ buffer_fragment:
         frag_buff->data = NULL;
         frag_buff->len = 0;
 
-        printk("macsec_handle_frame fehler16\n");
+       // printk("Drop non empty buffer\n");
     }
 
     frag_buff->data = kmalloc(skb->len, GFP_ATOMIC);
 
     if(!frag_buff->data) {
-        printk("macsec_handle_frame fehler17\n");
+      //  printk("Out of memory...3\n");
         spin_unlock_bh(&fragment_lock);
         return  -ENOMEM;
     }
@@ -1436,7 +1415,6 @@ buffer_fragment:
     consume_skb(skb);
 
     *pskb = NULL;
-	printk("macsec_handle_frame ende 1\n");
     return RX_HANDLER_CONSUMED;
 
 deliver:
@@ -1454,7 +1432,6 @@ deliver:
 	rcu_read_unlock();
 
 	*pskb = NULL;
-		printk("macsec_handle_frame ende 2\n");
 	return RX_HANDLER_CONSUMED;
 
 drop:
@@ -1465,7 +1442,6 @@ drop_nosa:
 drop_direct:
 	kfree_skb(skb);
 	*pskb = NULL;
-	printk("macsec_handle_frame fehler ende 1\n");
 	return RX_HANDLER_CONSUMED;
 
 nosci:
@@ -1497,6 +1473,7 @@ nosci:
 		nskb = skb_clone(skb, GFP_ATOMIC);
 		if (!nskb)
 			break;
+
 		macsec_reset_skb(nskb, macsec->secy.netdev);
 
 		ret = netif_rx(nskb);
@@ -1511,7 +1488,6 @@ nosci:
 
 	rcu_read_unlock();
 	*pskb = skb;
-	printk("macsec_handle_frame ende 3\n");
 	return RX_HANDLER_PASS;
 }
 
@@ -2605,7 +2581,7 @@ static int nla_put_secy(struct macsec_secy *secy, struct sk_buff *skb)
 
 	if(secy->key_len != 16 && secy->key_len != 32)
 		{
-			printk("nla_put_secy fehler 1\n");
+			//printk("nla_put_secy fehler1\n");
 			goto cancel;
 		}
 
@@ -2970,14 +2946,12 @@ static netdev_tx_t macsec_start_xmit(struct sk_buff *skb,
 		len = skb->len;
 		ret = dev_queue_xmit(skb);
 		count_tx(dev, ret, len);
-printk("xmit 0\n");
 		return ret;
 	}
 
 	if (!secy->operational) {
 		kfree_skb(skb);
 		dev->stats.tx_dropped++;
-		printk("xmit 1\n");
 		return NETDEV_TX_OK;
 	}
 	//
@@ -2990,15 +2964,13 @@ printk("xmit 0\n");
             // Minimum Ethernet Frame length
             new_skb_len -= 60 - frag_len;
             frag_len = 60;
-	printk("xmit 2\n");
         }
         //Allocate a new &sk_buff and assign it a usage count of one
         skb_frag = dev_alloc_skb(frag_len);
 
         if(!skb_frag) {
-            printk("Could not allocate fragment skb \n");
+           // printk("Could not allocate fragment skb \n");
             dev->stats.tx_dropped++;
-            printk("xmit 3\n");
             return NETDEV_TX_OK;
         }
 
@@ -3008,11 +2980,10 @@ printk("xmit 0\n");
             old = skb;
             skb = skb_copy(skb, GFP_ATOMIC);
             consume_skb(old);
-		printk("xmit 4\n");
         }
         // Increase the headroom of an empty &sk_buff by reducing the tail room
         // macsec_extra_len = sectagLen(10 (+ 8) Bytes) + ethernet hhdr (2 Bytes)
-        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) + 2);
+        skb_reserve(skb_frag, ETH_HLEN + macsec_extra_len(sci_present) - 2);
         skb_split(skb, skb_frag, new_skb_len);
         skb_reset_network_header(skb_frag);
 
@@ -3020,11 +2991,9 @@ printk("xmit 0\n");
 
         if(skb_headroom(skb_frag) >= 2*ETH_ALEN) {
             skb_push(skb_frag, 2 * ETH_ALEN);
-printk("xmit 5\n");
         } else {
-            printk("Could not allocate headroom \n");
+            //printk("Could not allocate headroom \n");
             dev->stats.tx_dropped++;
-printk("xmit 6\n");
             return NETDEV_TX_OK;
         }
 
@@ -3032,11 +3001,9 @@ printk("xmit 6\n");
             eth = eth_hdr(skb);
             skb_reset_mac_header(skb_frag);
             memcpy(skb_mac_header(skb_frag), skb_mac_header(skb), 2 * ETH_ALEN);
-printk("xmit 7\n");
         } else {
-            printk("Could not copy MAC to fragment \n");
+            //printk("Could not copy MAC to fragment \n");
             dev->stats.tx_dropped++;
-	printk("xmit 8\n");
             return NETDEV_TX_OK;
         }
 
@@ -3046,7 +3013,6 @@ printk("xmit 7\n");
     if (IS_ERR(skb)) {
         if (PTR_ERR(skb) != -EINPROGRESS)
             dev->stats.tx_dropped++;
-printk("xmit 9 fehler encryption\n");
         return NETDEV_TX_OK;
     }
     macsec_count_tx(skb, &macsec->secy.tx_sc, macsec_skb_cb(skb)->tx_sa);
@@ -3054,11 +3020,9 @@ printk("xmit 9 fehler encryption\n");
 
     if(skb_frag) {
         skb_frag = macsec_encrypt(skb_frag, dev);
-printk("xmit 10\n");
         if (IS_ERR(skb_frag)) {
             if (PTR_ERR(skb_frag) != -EINPROGRESS)
                 dev->stats.tx_dropped++;
-printk("xmit 11\n");
             return NETDEV_TX_OK;
         }
         macsec_count_tx(skb_frag, &macsec->secy.tx_sc, macsec_skb_cb(skb_frag)->tx_sa);
@@ -3067,7 +3031,6 @@ printk("xmit 11\n");
 
     len = skb->len;
     if(skb_frag) {
-printk("xmit 12\n");
         spin_lock_bh(&xmit_lock);
     }
 
@@ -3076,7 +3039,6 @@ printk("xmit 12\n");
     count_tx(dev, ret, len);
 
     if(ret < 0) {
-printk("xmit 13\n");
         return ret;
     }
 
@@ -3084,15 +3046,14 @@ printk("xmit 13\n");
         len = skb_frag->len;
         ret = dev_queue_xmit(skb_frag);
         count_tx(dev, ret, len);
-printk("xmit 14\n");
+
         if(ret < 0) {
-printk("xmit 15\n");
             return ret;
         }
 
         spin_unlock_bh(&xmit_lock);
     }
-printk("xmit ende\n");
+
     return ret;
 }
 
