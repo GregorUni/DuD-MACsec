@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final7
+EVA_DIR=final8
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -348,13 +348,13 @@ make_info
 #eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
 #eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
 #eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
-eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
-eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
+#eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
+#eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
-eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
-eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
+#eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
+#eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
 #eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
