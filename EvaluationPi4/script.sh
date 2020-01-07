@@ -8,17 +8,17 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="~" #folder in which the git repository is located
-HOST_MAC_ADR="18:d6:c7:0c:16:82" #mac adress
+HOST_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
 HOST_ETHERNET_NAME="eth2"
 
 #variables for remote_pc
 Remote_PTH=/home/pi #folder in which the git repository is located
-Remote_MAC_ADR="dc:a6:32:18:b2:56" #mac adress
+Remote_MAC_ADR="ec:08:6b:1c:24:42" #mac adress
 DEST_IP=10.10.12.2 #macsec ip
-REMOTE_IP=141.76.55.44 #internet ip
-ETHERNET_IP=192.168.1.20 #ethernet ip
-REMOTE_ETHERNET_NAME="eth0" #name of ethernet interface
+REMOTE_IP=141.76.55.43 #internet ip
+ETHERNET_IP=192.168.1.24 #ethernet ip
+REMOTE_ETHERNET_NAME="eth2" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
@@ -68,7 +68,7 @@ eva_ping() {
 	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
 	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
 	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
-	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
 
@@ -92,7 +92,7 @@ eva_iperf() {
             echo -ne "," >> $BANDWIDTH_FILE
         fi;
     done
-	kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
+	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 	
 
@@ -219,8 +219,8 @@ eva() {
 
 		
 		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $ON"
-		cd ~/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
-		cd ~/DuD-MACsec/EvaluationPi/
+		cd /home/pi/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
+		cd /home/pi/DuD-MACsec/EvaluationPi/
 		
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
@@ -232,8 +232,8 @@ eva() {
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
 		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $REMOTE_ETHERNET_NAME $HOST_MAC_ADR $DEST_IP $OFF"
-		cd ~/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
-		cd ~/DuD-MACsec/EvaluationPi/
+		cd /home/pi/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
+		cd /home/pi/DuD-MACsec/EvaluationPi/
 		
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
