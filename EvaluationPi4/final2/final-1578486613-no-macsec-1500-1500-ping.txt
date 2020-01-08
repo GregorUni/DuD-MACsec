@@ -1,0 +1,60 @@
+PING 192.168.1.24 (192.168.1.24) 78(106) bytes of data.
+86 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.09 ms
+86 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=0.969 ms
+86 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.04 ms
+86 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=0.951 ms
+86 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=0.949 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.949/1.000/1.091/0.056 ms, ipg/ewma 1.110/1.043 ms
+PING 192.168.1.24 (192.168.1.24) 206(234) bytes of data.
+214 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.05 ms
+214 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=1.01 ms
+214 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.08 ms
+214 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=0.978 ms
+214 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=0.961 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.961/1.016/1.079/0.052 ms, ipg/ewma 1.097/1.031 ms
+PING 192.168.1.24 (192.168.1.24) 462(490) bytes of data.
+470 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.11 ms
+470 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=1.01 ms
+470 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.08 ms
+470 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=1.08 ms
+470 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=1.08 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 1.007/1.072/1.114/0.054 ms, ipg/ewma 1.139/1.094 ms
+PING 192.168.1.24 (192.168.1.24) 974(1002) bytes of data.
+982 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.07 ms
+982 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=0.990 ms
+982 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.07 ms
+982 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=1.08 ms
+982 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=1.08 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 0.990/1.057/1.078/0.053 ms, ipg/ewma 1.161/1.067 ms
+PING 192.168.1.24 (192.168.1.24) 1350(1378) bytes of data.
+1358 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.11 ms
+1358 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=1.02 ms
+1358 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.05 ms
+1358 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=1.08 ms
+1358 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=1.07 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 1.019/1.064/1.109/0.036 ms, ipg/ewma 1.141/1.087 ms
+PING 192.168.1.24 (192.168.1.24) 1436(1464) bytes of data.
+1444 bytes from 192.168.1.24: icmp_seq=1 ttl=64 time=1.07 ms
+1444 bytes from 192.168.1.24: icmp_seq=2 ttl=64 time=1.12 ms
+1444 bytes from 192.168.1.24: icmp_seq=3 ttl=64 time=1.06 ms
+1444 bytes from 192.168.1.24: icmp_seq=4 ttl=64 time=1.07 ms
+1444 bytes from 192.168.1.24: icmp_seq=5 ttl=64 time=1.07 ms
+
+--- 192.168.1.24 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 5ms
+rtt min/avg/max/mdev = 1.064/1.077/1.117/0.041 ms, ipg/ewma 1.163/1.073 ms

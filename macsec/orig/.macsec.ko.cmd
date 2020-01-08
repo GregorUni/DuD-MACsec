@@ -1,1 +1,1 @@
-cmd_/root/DuD-MACsec/macsec/orig/macsec.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T /usr/src/linux-headers-4.19.0-5-common/scripts/module-common.lds  --build-id  -o /root/DuD-MACsec/macsec/orig/macsec.ko /root/DuD-MACsec/macsec/orig/macsec.o /root/DuD-MACsec/macsec/orig/macsec.mod.o ;  true
+cmd_/home/pi/DuD-MACsec/macsec/orig/macsec.ko := ld -r  -EL -T ./scripts/module-common.lds -T ./arch/arm/kernel/module.lds  --build-id  -o /home/pi/DuD-MACsec/macsec/orig/macsec.ko /home/pi/DuD-MACsec/macsec/orig/macsec.o /home/pi/DuD-MACsec/macsec/orig/macsec.mod.o ;  true

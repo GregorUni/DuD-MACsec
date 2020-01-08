@@ -1,0 +1,14 @@
+"Dstat 0.7.3 CSV output"
+"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
+"Host:","r21",,,,"User:","root"
+"Cmdline:","dstat -N eth2,macsec0--noheaders --output final/ping-1578411774-orig-jumbo-without-encryption-9000-dstat.csv",,,,"Date:","07 Jan 2020 15:44:38 GMT"
+"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
+1.170,1.358,97.363,0.108,0,267485.223,14650.166,0,0,0,0,663.175,1018.092
+
+
+"Host:","r21",,,,"User:","root"
+"Cmdline:","dstat -N eth2,macsec0--noheaders --output final/ping-1578411774-orig-jumbo-without-encryption-9000-dstat.csv",,,,"Date:","07 Jan 2020 15:45:36 GMT"
+"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
+1.361,1.671,96.863,0.105,0,255747.275,15819.709,0,0,0,0,802.428,1446.083
