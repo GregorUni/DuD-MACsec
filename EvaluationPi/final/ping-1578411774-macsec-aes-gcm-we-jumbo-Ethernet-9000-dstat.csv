@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","r21",,,,"User:","root"
-"Cmdline:","dstat -N eth2,macsec0--noheaders --output final/ping-1578411774-macsec-aes-gcm-we-jumbo-Ethernet-9000-dstat.csv",,,,"Date:","07 Jan 2020 15:51:15 GMT"
-"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-1.924,2.705,95.282,0.090,0,203604.150,18658.237,0,0,0,0,1169.354,2380.614

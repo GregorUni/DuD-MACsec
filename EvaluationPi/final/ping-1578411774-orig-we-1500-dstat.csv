@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","r21",,,,"User:","root"
-"Cmdline:","dstat -N eth2,macsec0--noheaders --output final/ping-1578411774-orig-we-1500-dstat.csv",,,,"Date:","07 Jan 2020 15:43:41 GMT"
-"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-0.936,1.040,97.913,0.111,0,280230.601,13444.467,0,0,0,0,492.903,494.301

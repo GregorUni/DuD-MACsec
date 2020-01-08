@@ -480,7 +480,7 @@ ethernet1 <- ethernetSet[[3]][[2]][[4]]
 
 cpuchacha2 <- vector(mode="integer", length=94)
 for (i in 1:94) {
-    cpuchacha2[i]<- chacha1/(100 - mean(cpuchachavalues[i:i+10]))
+    cpuchacha2[i]<- chacha1/(mean(cpuchachavalues[i:i+10]))
 }
 cpuaegis2 <- vector(mode="integer", length=100)
 for (i in 1:100) {

@@ -1,7 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","r21",,,,"User:","root"
-"Cmdline:","dstat -N eth2,macsec0--noheaders --output final/ping-1578411774-macsec-chachapoly-we-1500-1500-dstat.csv",,,,"Date:","07 Jan 2020 15:52:32 GMT"
-"total cpu usage",,,,,"dsk/total",,"net/eth2",,"paging",,"system",
-"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
-2.086,2.963,94.864,0.087,0,194522.173,19286.859,0,0,0,0,1295.238,2820.934
