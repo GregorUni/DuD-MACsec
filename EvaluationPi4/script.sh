@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final2
+EVA_DIR=ethernet1
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -8,17 +8,17 @@ NC='\033[0m' # No Color
 
 #variables for host_pc
 Host_PTH="~" #folder in which the git repository is located
-HOST_MAC_ADR="18:d6:c7:0c:16:d3" #mac adress
+HOST_MAC_ADR="dc:a6:32:18:b0:f1" #mac adress
 SOURC_IP=10.10.12.1 #name of ethernet interface
-HOST_ETHERNET_NAME="eth2"
+HOST_ETHERNET_NAME="eth0"
 
 #variables for remote_pc
 Remote_PTH=/home/pi #folder in which the git repository is located
-Remote_MAC_ADR="ec:08:6b:1c:24:42" #mac adress
+Remote_MAC_ADR="dc:a6:32:18:b2:56" #mac adress of macsec interface
 DEST_IP=10.10.12.2 #macsec ip
-REMOTE_IP=141.76.55.43 #internet ip
-ETHERNET_IP=192.168.1.24 #ethernet ip
-REMOTE_ETHERNET_NAME="eth2" #name of ethernet interface
+REMOTE_IP=192.168.2.20 #internet ip
+ETHERNET_IP=192.168.2.20 #ethernet ip
+REMOTE_ETHERNET_NAME="eth0" #name of ethernet interface
 
 #Cipher configs for iproute2
 AEGIS="aegis128l-128"
@@ -62,12 +62,12 @@ eva_ping() {
         #sudo timeout 360 ping -A $3 -c 50000 -s $((( $2 - 28 ))) # packet sizes to test -> 16 86 214 470 982 1358 1472
 	#sudo timeout 360 ping -A $3 -c 50000 -s $((( 16 - 8 )))   # cause of a bug you have to configure the packet size this way
 	dstat -N $HOST_ETHERNET_NAME,macsec0--noheaders --output $EVA_DIR/ping-$FPREFIX-$1-$2-dstat.csv > /dev/null 2>&1 &	
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 106 - 28 ))) >> $PING_FILE
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 234 - 28 ))) >> $PING_FILE
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 490 - 28 ))) >> $PING_FILE
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 1002 - 28 ))) >> $PING_FILE
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 1378 - 28 ))) >> $PING_FILE
-	sudo timeout 120 ping -A $3 -c 5 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 106 - 28 ))) >> $PING_FILE
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 234 - 28 ))) >> $PING_FILE
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 490 - 28 ))) >> $PING_FILE
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1002 - 28 ))) >> $PING_FILE
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1378 - 28 ))) >> $PING_FILE
+	sudo timeout 120 ping -A $3 -c 50000 -s $((( 1464 - 28 ))) >> $PING_FILE #somehow this doesnt work(maybe the packetsize is to big for the mtu?)
 	sudo kill `ps -ef | grep dstat | grep -v grep | awk '{print $2}'`
 }
 
@@ -124,7 +124,7 @@ eva() {
 		#loading macsec with fragmentation and crypto extension
 		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec ; sh conf-macsec.sh;"
 		cd ../macsec/ ;  sh conf-macsec.sh
-		cd ../EvaluationPi/
+		cd ../EvaluationPi4/
 		
 		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPi4/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
 		sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
@@ -284,13 +284,13 @@ init
 make_info
 eva $1 "no-macsec-1464" 1000 1464
 eva $1 "no-macsec-1500" 1000 1500
-eva $1 "no-macsec-2928" 1000 2928
+#eva $1 "no-macsec-2928" 1000 2928
 eva $1 "orig" 1464 1500 m #
 eva $1 "orig-we" 1464 1500 mw #
-eva $1 "orig-jumbo" 1500 9000 m #
-eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
-eva $1 "orig-jumbo" 2928 9000 m #
-eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
+#eva $1 "orig-jumbo" 1500 9000 m #
+#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+#eva $1 "orig-jumbo" 2928 9000 m #
+#eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
 eva $1 "macsec-aesgcm-e" 1464 1500 med 
 eva $1 "macsec-aesgcm-we" 1464 1500 mwe
@@ -299,14 +299,14 @@ eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
 eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
 eva $1 "macsec-morus640-e-frag" 1500 1500 mme
-eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
-eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
-eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
-eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
-eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
-eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
-eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
-eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
+#eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
+#eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
+#eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
+#eva $1 "macsec-aesgcm-we-frag-jumbo" 2928 1500 mwe
+#eva $1 "macsec-aesgcm-e-jumbo-Ethernet" 1500 9000 med
+#eva $1 "macsec-aes-gcm-we-jumbo-Ethernet" 1500 9000 mwe
+#eva $1 "macsec-aes-gcm-e-jumbo-MACsec-Ethernet" 2928 9000 med
+#eva $1 "macsec-aes-gcm-we-jumbo-MACsec-Ethernet" 2928 9000 mwe 
 eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
 eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
