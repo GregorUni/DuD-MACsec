@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EVA_DIR=final
+EVA_DIR=final2
 FPREFIX=$(date +%s)
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -106,7 +106,7 @@ eva() {
 		IP=$DEST_IP
 		#configure macsec device on remote computer and host computer
 		
-		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationPi/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $OFF"
+		ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationOdroid/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $OFF"
                 sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $OFF
                 
 		#set mtu for ethernet device and macsec0
@@ -230,8 +230,8 @@ eva() {
 
 #		cd ~/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
 #		cd ~/DuD-MACsec/EvaluationPi/
-	        ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationOdroid/remote_config_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON"
-                sh config_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $ON
+	        ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationOdroid/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $ON"
+                sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $ON
 
 		
 
@@ -244,12 +244,12 @@ eva() {
 
 	elif [[ $5 == mw ]]; then  #case macsec original without encryption
 		#loading original macsec module into kernel
-#		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF"
+#		ssh root@$REMOTE_IP "cd $Remote_PTH/DuD-MACsec/macsec/orig/ ; sh remote_orig_conf_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $OFF"
 #		cd ~/DuD-MACsec/macsec/orig/ ; sh orig_conf_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF
 #		cd ~/DuD-MACsec/EvaluationPi/
 
-	        ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationOdroid/remote_config_macsec.sh $HOST_ETHERNET_NAME $Remote_MAC_ADR $SOURC_IP $OFF"
-                sh config_macsec.sh $HOST_ETHERNET_NAME $MORUS $Remote_MAC_ADR $SOURC_IP $OFF
+	        ssh root@$REMOTE_IP "sh $Remote_PTH/DuD-MACsec/EvaluationOdroid/remote_config_macsec.sh $REMOTE_ETHERNET_NAME $AES $HOST_MAC_ADR $DEST_IP $OFF"
+                sh config_macsec.sh $HOST_ETHERNET_NAME $AES $Remote_MAC_ADR $SOURC_IP $OFF
 		
 		mtu_config_for_iperf3 $3 $4
 		make_info $2 $4
@@ -304,7 +304,7 @@ eva $1 "no-macsec-2928" 1000 2928
 #eva $1 "orig" 1464 1500 m #
 #eva $1 "orig-we" 1464 1500 mw #
 #eva $1 "orig-jumbo" 1500 9000 m #
-#eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
+##eva $1 "orig-jumbo-without-encryption" 1500 9000 mw # iperf3 cases are redundant (except the last one)
 #eva $1 "orig-jumbo" 2928 9000 m #
 #eva $1 "orig-jumbo-without-encryption" 2928 9000 mw #
 #testcases with frag 
@@ -313,8 +313,8 @@ eva $1 "macsec-aesgcm-we" 1464 1500 mwe
 eva $1 "macsec-aesgcm-e-frag" 1500 1500 med
 eva $1 "macsec-chachapoly-e-frag" 1500 1500 mce 
 eva $1 "macsec-aesgcm-we-frag" 1500 1500 mwe
-#eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
-#eva $1 "macsec-morus640-e-frag" 1500 1500 mme
+eva $1 "macsec-aegis128l-e-frag" 1500 1500 ae
+eva $1 "macsec-morus640-e-frag" 1500 1500 mme
 eva $1 "macsec-aesgcm-e-jumbo" 1500 2928 med 
 eva $1 "macsec-aesgcm-we-jumbo" 1500 2928 mwe
 eva $1 "macsec-aesgcm-e-frag-jumbo" 2928 1500 med
@@ -327,8 +327,8 @@ eva $1 "macsec-chachapoly-we-1500" 1464 1500 cwe
 eva $1 "macsec-chachapoly-e-1500" 1464 1500 mce
 eva $1 "macsec-aegis128l-e-1500" 1464 1500 ae
 eva $1 "macsec-aegis128l-we-1500" 1464 1500 awe
-#eva $1 "macsec-morus640-e-1500" 1464 1500 mme
-#eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
+eva $1 "macsec-morus640-e-1500" 1464 1500 mme
+eva $1 "macsec-morus640-we-1500" 1464 1500 mmwe
 # auch noch mit jumbo? also macsec-chachapoy-jumbo 1500,9000 und 2936, 9000? 1500 1500; 1464 1500 , 2936 1500 ,
 # without macsec funktioniert nicht, weil mtu configuration
 #denk dran, dass du vllt die ping größen und iperfgrößen ändern musst!
