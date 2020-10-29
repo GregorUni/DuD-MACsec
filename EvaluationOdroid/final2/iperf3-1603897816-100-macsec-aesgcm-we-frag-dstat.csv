@@ -1,0 +1,6 @@
+"Dstat 0.8.0 CSV output"
+"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
+"Host:","test2-ODROID-H2",,,,"User:","root"
+"Cmdline:","dstat -N enp3s0,macsec0--noheaders --output final2/iperf3-1603897816-100-macsec-aesgcm-we-frag-dstat.csv",,,,"Date:","28 Oct 2020 18:59:10 CET"
+"total cpu usage",,,,,"dsk/total",,"net/enp3s0",,"paging",,"system",
+"usr","sys","idl","wai","stl","read","writ","recv","send","in","out","int","csw"
