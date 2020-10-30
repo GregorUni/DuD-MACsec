@@ -2,7 +2,7 @@ library("rjson")
 library(jsonlite)
 library(gdata) 
 library(ggplot2)
-aes_file <- "final-1578412664-100-macsec-aesgcm-e-1464iperf.json"
+aes_file <- "final-1579625450-100-macsec-aesgcm-e-1464iperf.json"
 aes_data <- fromJSON(aes_file)
 aes <- as.character(toJSON(aes_data))
 aesSet <- data.frame(fromJSON(aes))
@@ -10,7 +10,7 @@ aes1 <- aesSet[[3]][[2]][[4]]
 aesBytes <- vector(mode="integer", length=1) 
 aesBytes[1] <- mean(aes1[1:100])
 
-aeswe_file <- "final-1578412664-100-macsec-aesgcm-we-1464iperf.json"
+aeswe_file <- "final-1579625450-100-macsec-aesgcm-we-1464iperf.json"
 aeswe_data <- fromJSON(aeswe_file)
 aeswe <- as.character(toJSON(aeswe_data))
 aesweSet <- data.frame(fromJSON(aeswe))
@@ -18,7 +18,7 @@ aeswe1 <- aesweSet[[3]][[2]][[4]]
 aesweBytes <- vector(mode="integer", length=1)
 aesweBytes[1] <- mean(aeswe1[1:100])
 
-chacha_file <- "final-1578412664-100-macsec-chachapoly-e-1500-1464iperf.json"
+chacha_file <- "final-1579625450-100-macsec-chachapoly-e-1500-1464iperf.json"
 chacha_data <- fromJSON(chacha_file)
 chacha <- as.character(toJSON(chacha_data))
 chachaSet <- data.frame(fromJSON(chacha))
@@ -27,7 +27,7 @@ chacha1 <- chacha1[!is.na(chacha1)]
 chachaBytes <- vector(mode="integer", length=1)
 chachaBytes[1] <- mean(chacha1[1:94])
 
-morus_file <- "final-1578412664-100-macsec-morus640-e-1500-1464iperf.json"
+morus_file <- "final-1579625450-100-macsec-morus640-e-1500-1464iperf.json"
 morus_data <- fromJSON(morus_file)
 morus <- as.character(toJSON(morus_data))
 morusSet <- data.frame(fromJSON(morus))
@@ -35,7 +35,7 @@ morus1 <- morusSet[[3]][[2]][[4]]
 morusBytes <- vector(mode="integer", length=1)
 morusBytes[1] <- mean(morus1[1:100])
 
-aegis_file <- "final-1578412664-100-macsec-aegis128l-e-1500-1464iperf.json"
+aegis_file <- "final-1579625450-100-macsec-aegis128l-e-1500-1464iperf.json"
 aegis_data <- fromJSON(aegis_file)
 aegis <- as.character(toJSON(aegis_data))
 aegisSet <- data.frame(fromJSON(aegis))
@@ -43,7 +43,7 @@ aegis1 <- aegisSet[[3]][[2]][[4]]
 aegisBytes <- vector(mode="integer", length=1)
 aegisBytes[1] <- mean(aegis1[1:100])
 
-nomacsec_file <- "final-1578412664-100-no-macsec-1500-1000iperf.json"
+nomacsec_file <- "final-1579625450-100-no-macsec-1500-1000iperf.json"
 nomacsec_data <- fromJSON(nomacsec_file)
 nomacsec <- as.character(toJSON(nomacsec_data))
 nomacsecSet <- data.frame(fromJSON(nomacsec))
@@ -52,7 +52,7 @@ nomacsec1 <- nomacsec1[!is.na(nomacsec1)]
 nomacsecBytes <- vector(mode="integer", length=1)
 nomacsecBytes[1] <- mean(nomacsec1[1:96])
 
-origmacsec_file <- "final-1578412664-100-orig-1464iperf.json"
+origmacsec_file <- "final-1579625450-100-orig-1464iperf.json"
 origmacsec_data <- fromJSON(origmacsec_file)
 origmacsec <- as.character(toJSON(origmacsec_data))
 origmacsecSet <- data.frame(fromJSON(origmacsec))
@@ -68,10 +68,10 @@ morusBytes<-morusBytes/1000000
 chachaBytes<-chachaBytes/1000000
 
 data=data.frame(name=c("Ethernet","AES-GCM-128","Chach20Poly1305","MORUS640","AEGIS128L","Standard MACsec"),value=c(nomacsecBytes[1],aesBytes[1],chachaBytes[1],morusBytes[1],aegisBytes[1],origmacsecBytes[1]))
-BandwithPlot<-ggplot(data, aes(x=name, y=value)) + geom_bar(stat = "identity") +coord_cartesian(ylim=c(0,500))+scale_y_continuous(name = "Bandbreite in Mbytes")
+BandwithPlot<-ggplot(data, aes(x=name, y=value)) + geom_bar(stat = "identity") +coord_cartesian(ylim=c(0,1150))+scale_y_continuous(name = "Bandbreite in Mbytes")
 
 #########################################################################
-aeseping <- read.table("final-1578412664-macsec-aesgcm-e-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
+aeseping <- read.table("final-1579625450-macsec-aesgcm-e-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
 aeseping7<- gsub("time=", "", aeseping[[7]])
 aeseping7 <-as.numeric(aeseping7)
 aeseping7 <- aeseping7[!is.na(aeseping7)]
@@ -92,7 +92,7 @@ aesEFrame$b <- factor(aesEFrame$b,labels = c(86,214 , 470, 982, 1358,1464))
 aesPlot <- ggplot(aesEFrame , aes(x=b, y=aeseping7))+ geom_boxplot() +scale_y_continuous(name = "Latenz in ms",breaks = seq(0.2,2.5,0.2),limits=c(0, 2.5)) +scale_x_discrete(name = "Paketgröße in Bytes") +
 ggtitle("Ping Tests von AES-GCM-128 mit Verschlüsselung")
 
-moruseping <- read.table("final-1578412664-macsec-morus640-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
+moruseping <- read.table("final-1579625450-macsec-morus640-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
 moruseping7<- gsub("time=", "", moruseping[[7]])
 moruseping7 <-as.numeric(moruseping7)
 moruseping7 <- moruseping7[!is.na(moruseping7)]
@@ -112,7 +112,7 @@ morusEFrame <- data.frame(g, moruseping7)
 morusEFrame$g <- factor(morusEFrame$g,labels = c(86,214 , 470, 982, 1358,1464))
 MorusPlot <- ggplot(morusEFrame , aes(x=g, y=moruseping7))+ geom_boxplot() +scale_y_continuous(name = "Latenz in ms",breaks = seq(0.2,2.5,0.2),limits=c(0, 2.5)) +scale_x_discrete(name = "Paketgröße in Bytes") + ggtitle("Ping Tests von MORUS640 mit Verschlüsselung")
 
-aegiseping <- read.table("final-1578412664-macsec-aegis128l-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
+aegiseping <- read.table("final-1579625450-macsec-aegis128l-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
 aegiseping7<- gsub("time=", "", aegiseping[[7]])
 aegiseping7 <-as.numeric(aegiseping7)
 aegiseping7 <- aegiseping7[!is.na(aegiseping7)]
@@ -134,7 +134,7 @@ aegisEFrame$f <- factor(aegisEFrame$f,labels = c(86,214 , 470, 982, 1358,1464))
 AegisPlot <- ggplot(aegisEFrame , aes(x=f, y=aegiseping7))+ geom_boxplot() +scale_y_continuous(name = "Latenz in ms",breaks = seq(0.2,2.5,0.2),limits=c(0, 2.5)) +scale_x_discrete(name = "Paketgröße in Bytes") +
 ggtitle("Ping Tests von AEGIS128L mit Verschlüsselung")
 
-chachaeping <- read.table("final-1578412664-macsec-chachapoly-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
+chachaeping <- read.table("final-1579625450-macsec-chachapoly-e-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
 chachaeping7<- gsub("time=", "", chachaeping[[7]])
 chachaeping7 <-as.numeric(chachaeping7)
 chachaeping7 <- chachaeping7[!is.na(chachaeping7)]
@@ -155,7 +155,7 @@ chachaEFrame$c <- factor(chachaEFrame$c,labels = c(86,214 , 470, 982, 1358,1464)
 ChachaPlot <- ggplot(chachaEFrame , aes(x=c, y=chachaeping7))+ geom_boxplot(coef = 6) +scale_y_continuous(name = "Latenz in ms",breaks = seq(0.2,2.5,0.2),limits=c(0, 2.5)) +scale_x_discrete(name = "Paketgröße in Bytes") +
 ggtitle("Ping Tests von ChaCha20-Poly1305 mit Verschlüsselung")
 
-ethernetping <- read.table("final-1578412664-no-macsec-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
+ethernetping <- read.table("final-1579625450-no-macsec-1500-1500-ping.txt",stringsAsFactor = FALSE, header = F, fill = T )
 ethernetping7<- gsub("time=", "", ethernetping[[7]])
 ethernetping7 <-as.numeric(ethernetping7)
 ethernetping7 <- ethernetping7[!is.na(ethernetping7)]
@@ -190,7 +190,7 @@ cpuchachavalues<-cpuchacha1[[1]]
 
 ######################################################################
 
-nomacsec1500_file <- "final-1578412664-100-no-macsec-1500-1000iperf.json"
+nomacsec1500_file <- "final-1579625450-100-no-macsec-1500-1000iperf.json"
 nomacsec1500_data <- fromJSON(nomacsec1500_file)
 nomacsec1500 <- as.character(toJSON(nomacsec1500_data))
 nomacsec1500Set <- data.frame(fromJSON(nomacsec1500))
@@ -199,7 +199,7 @@ nomacsec1500 <- nomacsec1500[!is.na(nomacsec1500)]
 nomacsec1500Bytes <- vector(mode="integer", length=1) 
 nomacsec1500Bytes[1] <- mean(nomacsec1500[1:96])
 
-origjumbo_file <- "final-1578412664-100-orig-jumbo-1500iperf.json"
+origjumbo_file <- "final-1579625450-100-orig-jumbo-1500iperf.json"
 origjumbo_data <- fromJSON(origjumbo_file)
 origjumbo <- as.character(toJSON(origjumbo_data))
 origjumboSet <- data.frame(fromJSON(origjumbo))
@@ -207,7 +207,7 @@ origjumbo <- origjumboSet[[3]][[2]][[4]]
 origjumboBytes <- vector(mode="integer", length=1) 
 origjumboBytes[1] <- mean(origjumbo[1:100])
 
-origjumbo2928_file <- "final-1578412664-100-orig-jumbo-2928iperf.json"
+origjumbo2928_file <- "final-1579625450-100-orig-jumbo-2928iperf.json"
 origjumbo2928_data <- fromJSON(origjumbo2928_file)
 origjumbo2928 <- as.character(toJSON(origjumbo2928_data))
 origjumbo2928Set <- data.frame(fromJSON(origjumbo2928))
@@ -215,7 +215,7 @@ origjumbo2928 <- origjumbo2928Set[[3]][[2]][[4]]
 origjumbo2928Bytes <- vector(mode="integer", length=1) 
 origjumbo2928Bytes[1] <- mean(origjumbo2928[1:100])
 
-macsecfrag_file <- "final-1578412664-100-macsec-aesgcm-e-frag-1500iperf.json"
+macsecfrag_file <- "final-1579625450-100-macsec-aesgcm-e-frag-1500iperf.json"
 macsecfrag_data <- fromJSON(macsecfrag_file)
 macsecfrag <- as.character(toJSON(macsecfrag_data))
 macsecfragSet <- data.frame(fromJSON(macsecfrag))
@@ -223,7 +223,7 @@ macsecfrag <- macsecfragSet[[3]][[2]][[4]]
 macsecfragBytes <- vector(mode="integer", length=1) 
 macsecfragBytes[1] <- mean(macsecfrag[1:100])
 
-macsecjumbo_file <- "final-1578412664-100-macsec-aesgcm-e-jumbo-1500iperf.json"
+macsecjumbo_file <- "final-1579625450-100-macsec-aesgcm-e-jumbo-1500iperf.json"
 macsecjumbo_data <- fromJSON(macsecjumbo_file)
 macsecjumbo <- as.character(toJSON(macsecjumbo_data))
 macsecjumboSet <- data.frame(fromJSON(macsecjumbo))
@@ -231,7 +231,7 @@ macsecjumbo <- macsecjumboSet[[3]][[2]][[4]]
 macsecjumboBytes <- vector(mode="integer", length=1) 
 macsecjumboBytes[1] <- mean(macsecjumbo[1:100])
 
-fragjumbo_file <- "final-1578412664-100-macsec-aesgcm-e-frag-jumbo-2928iperf.json"
+fragjumbo_file <- "final-1579625450-100-macsec-aesgcm-e-frag-jumbo-2928iperf.json"
 fragjumbo_data <- fromJSON(fragjumbo_file)
 fragjumbo <- as.character(toJSON(fragjumbo_data))
 fragjumboSet <- data.frame(fromJSON(fragjumbo))
@@ -340,34 +340,34 @@ ggtitle("Ping Tests von Verschlüsselungsalgorthmen") +labs(color = "Algorithmen
 ###############################################################################################
 
 library(scales)
-fragDstat <- read.csv(file="iperf3-1578412664-100-macsec-aesgcm-e-frag-dstat.csv",skip = 5, header=TRUE) 
+fragDstat <- read.csv(file="iperf3-1579625450-100-macsec-aesgcm-e-frag-dstat.csv",skip = 5, header=TRUE) 
 cpuaesfrag <- 100 - fragDstat[3] 
 cpuaesfrag1 <- head(cpuaesfrag,1019)
 cpuaesfragvalues<-cpuaesfrag1[[1]]
 
-aesfrag_file <- "final-1578412664-100-macsec-aesgcm-e-frag-1500iperf.json"
+aesfrag_file <- "final-1579625450-100-macsec-aesgcm-e-frag-1500iperf.json"
 aesfrag_data <- fromJSON(aesfrag_file)
 aesfrag <- as.character(toJSON(aesfrag_data))
 aesfragSet <- data.frame(fromJSON(aesfrag))
 aesfrag1 <- aesfragSet[[3]][[2]][[4]] 
 
-fragDstat1 <- read.csv(file="iperf3-1578412664-100-macsec-aesgcm-e-frag-jumbo-dstat.csv",skip = 5, header=TRUE) 
+fragDstat1 <- read.csv(file="iperf3-1579625450-100-macsec-aesgcm-e-frag-jumbo-dstat.csv",skip = 5, header=TRUE) 
 cpuaesjumbofrag <- 100 - fragDstat1[3] 
 cpuaesjumbofrag1 <- head(cpuaesjumbofrag,1019)
 cpuaesjumbofragvalues<-cpuaesjumbofrag1[[1]]
 
-aesjumbofrag_file <- "final-1578412664-100-macsec-aesgcm-e-frag-jumbo-2928iperf.json"
+aesjumbofrag_file <- "final-1579625450-100-macsec-aesgcm-e-frag-jumbo-2928iperf.json"
 aesjumbofrag_data <- fromJSON(aesjumbofrag_file)
 aesjumbofrag <- as.character(toJSON(aesjumbofrag_data))
 aesjumbofragSet <- data.frame(fromJSON(aesjumbofrag))
 aesjumbofrag1 <- aesjumbofragSet[[3]][[2]][[4]] 
 
-dstat4 <- read.csv(file="iperf3-1578412664-100-no-macsec-1500-dstat.csv",skip = 5, header=TRUE) 
+dstat4 <- read.csv(file="iperf3-1579625450-100-no-macsec-1500-dstat.csv",skip = 5, header=TRUE) 
 cpuethernet <- 100 - dstat4[3] 
 cpuethernet1 <- head(cpuethernet,1019)
 cpuethernetvalues<-cpuethernet1[[1]]
 
-ethernet_file <- "final-1578412664-100-no-macsec-1500-1000iperf.json"
+ethernet_file <- "final-1579625450-100-no-macsec-1500-1000iperf.json"
 ethernet_data <- fromJSON(ethernet_file)
 ethernet <- as.character(toJSON(ethernet_data))
 ethernetSet <- data.frame(fromJSON(ethernet))
@@ -418,58 +418,58 @@ remote: eth0 3c:d9:2b:02:92:0d
 no-macsec 1000
 enp2s0f0
 
-dstat <- read.csv(file="iperf3-1578412664-100-macsec-chachapoly-e-1500-dstat.csv",skip = 5, header=TRUE) 
+dstat <- read.csv(file="iperf3-1579625450-100-macsec-chachapoly-e-1500-dstat.csv",skip = 5, header=TRUE) 
 cpuchacha <- 100 - dstat[3] 
 cpuchacha1 <- head(cpuchacha,1019)
 cpuchachavalues<-cpuchacha1[[1]]
 
-chacha_file <- "final-1578412664-100-macsec-chachapoly-e-1500-1464iperf.json"
+chacha_file <- "final-1579625450-100-macsec-chachapoly-e-1500-1464iperf.json"
 chacha_data <- fromJSON(chacha_file)
 chacha <- as.character(toJSON(chacha_data))
 chachaSet <- data.frame(fromJSON(chacha))
 chacha1 <- chachaSet[[3]][[2]][[4]] 
 chacha1 <- chacha1[!is.na(chacha1)] 
 
-dstat1 <- read.csv(file="iperf3-1578412664-100-macsec-aegis128l-e-1500-dstat.csv",skip = 5, header=TRUE) 
+dstat1 <- read.csv(file="iperf3-1579625450-100-macsec-aegis128l-e-1500-dstat.csv",skip = 5, header=TRUE) 
 cpuaegis <- 100 - dstat1[3] 
 cpuaegis1 <- head(cpuaegis,1019)
 cpuaegisvalues<-cpuaegis1[[1]]
 
-aegis_file <- "final-1578412664-100-macsec-aegis128l-e-1500-1464iperf.json"
+aegis_file <- "final-1579625450-100-macsec-aegis128l-e-1500-1464iperf.json"
 aegis_data <- fromJSON(aegis_file)
 aegis <- as.character(toJSON(aegis_data))
 aegisSet <- data.frame(fromJSON(aegis))
 aegis1 <- aegisSet[[3]][[2]][[4]] 
 
-dstat2 <- read.csv(file="iperf3-1578412664-100-macsec-morus640-e-1500-dstat.csv",skip = 5, header=TRUE) 
+dstat2 <- read.csv(file="iperf3-1579625450-100-macsec-morus640-e-1500-dstat.csv",skip = 5, header=TRUE) 
 cpumorus <- 100 - dstat2[3] 
 cpumorus1 <- head(cpumorus,1019)
 cpumorusvalues<-cpumorus1[[1]]
 
-morus_file <- "final-1578412664-100-macsec-morus640-e-1500-1464iperf.json"
+morus_file <- "final-1579625450-100-macsec-morus640-e-1500-1464iperf.json"
 morus_data <- fromJSON(morus_file)
 morus <- as.character(toJSON(morus_data))
 morusSet <- data.frame(fromJSON(morus))
 morus1 <- morusSet[[3]][[2]][[4]] 
 
-dstat3 <- read.csv(file="iperf3-1578412664-100-macsec-aesgcm-e-dstat.csv",skip = 5, header=TRUE) 
+dstat3 <- read.csv(file="iperf3-1579625450-100-macsec-aesgcm-e-dstat.csv",skip = 5, header=TRUE) 
 cpuaes <- 100 - dstat3[3] 
 cpuaes1 <- head(cpuaes,1019)
 cpuaesvalues<-cpuaes1[[1]]
 
-aes_file <- "final-1578412664-100-macsec-aesgcm-e-1464iperf.json"
+aes_file <- "final-1579625450-100-macsec-aesgcm-e-1464iperf.json"
 aes_data <- fromJSON(aes_file)
 aes <- as.character(toJSON(aes_data))
 aesSet <- data.frame(fromJSON(aes))
 aes1 <- aesSet[[3]][[2]][[4]] 
 
-dstat4 <- read.csv(file="iperf3-1578412664-100-no-macsec-1500-dstat.csv",skip = 5, header=TRUE) 
+dstat4 <- read.csv(file="iperf3-1579625450-100-no-macsec-1500-dstat.csv",skip = 5, header=TRUE) 
 cpuethernet <- 100 - dstat4[3] 
 cpuethernet1 <- head(cpuethernet,1019)
 #cpuethernetvalues<-as.numeric(levels(cpuethernet1[[1]]))[cpuethernet1[[1]]]
 cpuethernetvalues<-cpuethernet1[[1]]
 
-ethernet_file <- "final-1578412664-100-no-macsec-1500-1000iperf.json"
+ethernet_file <- "final-1579625450-100-no-macsec-1500-1000iperf.json"
 ethernet_data <- fromJSON(ethernet_file)
 ethernet <- as.character(toJSON(ethernet_data))
 ethernetSet <- data.frame(fromJSON(ethernet))
@@ -532,7 +532,7 @@ ggtitle("Iperf3 Tests Mbytes/CPU-Auslastung ")
 
 
 ###################################################################################
-nomacsec1500_file <- "final-1578412664-100-no-macsec-1500-1000iperf.json"
+nomacsec1500_file <- "final-1579625450-100-no-macsec-1500-1000iperf.json"
 nomacsec1500_data <- fromJSON(nomacsec1500_file)
 nomacsec1500 <- as.character(toJSON(nomacsec1500_data))
 nomacsec1500Set <- data.frame(fromJSON(nomacsec1500))
@@ -541,7 +541,7 @@ nomacsec1500 <- nomacsec1500[!is.na(nomacsec1500)]
 nomacsec1500Bytes <- vector(mode="integer", length=1) 
 nomacsec1500Bytes[1] <- mean(nomacsec1500[1:96])
 
-macsecfrag_file1 <- "final-1578412664-100-macsec-aesgcm-e-frag-1500iperf.json"
+macsecfrag_file1 <- "final-1579625450-100-macsec-aesgcm-e-frag-1500iperf.json"
 macsecfrag_data1 <- fromJSON(macsecfrag_file1)
 macsecfrag1 <- as.character(toJSON(macsecfrag_data1))
 macsecfragSet1 <- data.frame(fromJSON(macsecfrag1))
@@ -549,7 +549,7 @@ macsecfrag1 <- macsecfragSet1[[3]][[2]][[4]]
 macsecfragBytes1 <- vector(mode="integer", length=1) 
 macsecfragBytes1[1] <- mean(macsecfrag1[1:100])
 
-aegisfrag_file <- "final-1578412664-100-macsec-aegis128l-e-frag-1500iperf.json"
+aegisfrag_file <- "final-1579625450-100-macsec-aegis128l-e-frag-1500iperf.json"
 aegisfrag_data <- fromJSON(aegisfrag_file)
 aegisfrag <- as.character(toJSON(aegisfrag_data))
 aegisfragSet <- data.frame(fromJSON(aegisfrag))
@@ -557,7 +557,7 @@ aegisfrag <- aegisfragSet[[3]][[2]][[4]]
 aegisfragBytes <- vector(mode="integer", length=1) 
 aegisfragBytes[1] <- mean(aegisfrag[1:100])
 
-fragchachapoly_file <- "final-1578412664-100-macsec-chachapoly-e-frag-1500iperf.json"
+fragchachapoly_file <- "final-1579625450-100-macsec-chachapoly-e-frag-1500iperf.json"
 fragchachapoly_data <- fromJSON(fragchachapoly_file)
 fragchachapoly <- as.character(toJSON(fragchachapoly_data))
 fragchachapolySet <- data.frame(fromJSON(fragchachapoly))
@@ -566,7 +566,7 @@ fragchachapolyBytes <- vector(mode="integer", length=1)
 fragchachapolyBytes[1] <- mean(fragchachapoly[1:100])
 
 
-fragmorus_file <- "final-1578412664-100-macsec-morus640-e-frag-1500iperf.json"
+fragmorus_file <- "final-1579625450-100-macsec-morus640-e-frag-1500iperf.json"
 fragmorus_data <- fromJSON(fragmorus_file)
 fragmorus <- as.character(toJSON(fragmorus_data))
 fragmorusSet <- data.frame(fromJSON(fragmorus))
